@@ -1,0 +1,28 @@
+h2
+  | Create A Profile for >> 
+  = @user.first_name 
+  h2/
+
+= bootstrap_form_for [:admin, @profile] do |f|
+  #text_response_div
+    p
+      b Text Response
+    = f.text_field :text_response, hide_label: true, required: true 
+  #comparative_1_div
+    p
+      b Comparative 1
+    = f.text_field :comparative_1, hide_label: true, required: true
+  #comparative_2_div
+    p
+      b Comparative 2
+    = f.text_field :comparative_2, hide_label: true, required: true
+  = f.hidden_field :user_id, :value => @user.id
+  = f.submit 'Done'
+
+
+
+
+
+
+
+

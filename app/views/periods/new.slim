@@ -1,0 +1,67 @@
+h2 Create a session
+
+= bootstrap_form_for @period do |f|
+  = f.datetime_field :start_time, label: 'What time does it start?', class: 'text-input',data: { index: "7"}
+  p    
+  = f.datetime_field :end_time, label: 'What time does it end?', class: 'text-input',data: { index: "7"}
+  p
+    b Select Group/Student
+  = select_tag "groups", nil, id: 'power-search-2', class: "select-example-2", multiple: true
+  p   
+    b Select Tutor
+  = f.select :tutor_id, User.tutor.map {|i| i.name}, { hide_label: true,prompt: 'Select Tutor'}, { id: 'individual_select'}    
+  p
+    b Is the session completed?
+  = f.select :period_status, [{"Incomplete":1}, {"Done": 0}].map {|i| [i.keys[0], i.values[0]]}, { hide_label: true, prompt: 'Status'},{class: 'test',data: { index: "3"}}
+  = f.submit 'Done'
+
+javascript:
+
+  $(document).ready(function(){
+      $('#class_type_select').on('change', function() {
+        if (this.value == "Individual")
+        {
+          $("#group_select").hide();
+          $("#individual_select").toggle();
+        } else {
+          $("#individual_select").hide();
+          $("#group_select").toggle();
+        }
+      });
+  });
+
+  $(document).ready(function(){
+    $(".select-example-2").select2({
+      maximumSelectionLength: 1,
+      placeholder: "Select the group",
+      createTag: function (params) {
+        return {
+          id: params.term,
+          text: params.term,
+          newOption: true
+        }
+      },
+      ajax: {
+        url: "/admin/groups",
+        dataType: 'json',
+        delay: 250,
+        data: function (params) {
+          return {
+            q: params.term, // search term
+            page: params.page
+          };
+        },
+        processResults: function (data, params) {
+          return { results: $.map( data, function(client, i) {
+            debugger
+              var displayResult = client.name 
+                  return { id: client.id, text: displayResult}
+              } ) };          
+        }
+      },
+    });
+  });
+
+
+
+

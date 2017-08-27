@@ -1,0 +1,25 @@
+@import "select2";
+@import "bootstrap-sprockets";
+@import "bootstrap";
+@import "font-awesome";
+@import "rails_bootstrap_forms";
+@import "periods";
+
+
+#school_name_div {
+  display: none; 
+}
+
+#group_status_div {
+  display: none; 
+}
+
+ #existing_group_div {
+  display: none; 
+}
+
+
+#power-search {
+  width: 600px;
+}
+

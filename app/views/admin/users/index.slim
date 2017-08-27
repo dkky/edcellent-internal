@@ -1,0 +1,24 @@
+.well
+  = form_for_filterrific @filterrific do |f|
+    .row
+      .col-md-1
+        .form-group.chardin_box data-position='top'
+          label Status
+          = f.select :with_user_access,
+                     @filterrific.select_options[:with_user_access],
+                     { include_blank: '- Any -' },
+                     { class: 'form-control' }
+      .col-md-2
+        .form-group.chardin_box data-position='top'               
+          label Intake
+          = f.select :with_year_level,
+                     @filterrific.select_options[:with_year_level],
+                     { include_blank: '- Year 8 to 12 -' },
+                     { class: 'form-control' }
+
+
+     
+
+#results
+  = render partial: 'admin/users/list',
+           locals: { :users => @users }

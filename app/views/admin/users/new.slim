@@ -1,0 +1,97 @@
+h2 Create a User
+
+= bootstrap_form_for @user, url: admin_users_path(@user) do |f|
+  p
+    b User Type 
+  = f.select :user_access, User.user_accesses.keys, { hide_label: true, prompt: "Select the type" }
+  #first_name_div
+    p
+      b First Name
+    = f.text_field :first_name, hide_label: true, required: true 
+  #last_name_div
+    p
+      b Last Name
+    = f.text_field :last_name, hide_label: true, required: true
+  #school_name_div
+    p
+      b School
+    = f.text_field :school, hide_label: true, required: true
+  p
+    b What's the student's class type?
+    = select_tag "class_type", options_for_select(["individual","group"])
+  #group_status_div
+    p
+      b Has the group been created?
+      = select_tag "group_status", options_for_select(["no","yes"])
+  #existing_group_div
+    p
+      = select_tag "groups", nil, id: 'power-search', class: "select-example", multiple: true
+  = f.submit 'Done'
+
+
+
+javascript:
+
+  $(document).ready(function(){
+
+      $('#user_user_access').on('change', function() {
+        if ( this.value == "student" )
+        {
+          $("#school_name_div").toggle();
+        } else {
+          $("#school_name_div").hide();
+
+        }
+      });
+
+      $('#class_type').on('change', function() {
+        if ( this.value == "group" )
+        {
+          $("#group_status_div").toggle()
+        } else {
+          $("#group_status_div").hide()
+        }
+      });
+
+      $('#group_status').on('change', function() {
+        if ( this.value == "yes" )
+        {
+          $("#existing_group_div").toggle()
+        } else {
+          $("#existing_group_div").hide()
+        }
+      });
+
+      $(".select-example").select2({
+        tags: true, 
+        maximumSelectionLength: 1,
+        placeholder: "Select an existing group/Create a new one",
+        createTag: function (params) {
+          return {
+            id: params.term,
+            text: params.term,
+            newOption: true
+          }
+        },
+        ajax: {
+          url: "/admin/groups",
+          dataType: 'json',
+          delay: 250,
+          data: function (params) {
+            return {
+              q: params.term, // search term
+              page: params.page
+            };
+          },
+          processResults: function (data, params) {
+            return { results: $.map( data, function(client, i) {
+                    return { id: client.id, text: client.name }
+                } ) };          
+          }
+        },
+      });
+  });
+
+
+
+

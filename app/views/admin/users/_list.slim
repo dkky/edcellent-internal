@@ -1,0 +1,27 @@
+.well.well-small
+  .pull-right data-position="bottom"
+    = link_to "Reset filters", reset_filterrific_url, class: 'btn btn-default btn-sm'
+  .chardin_box data-position='bottom'
+    = page_entries_info users, model: 'user'
+  .chardin_box data-position='bottom'
+    = render_filterrific_spinner
+
+table.table
+  tr
+    th Name
+    th Email
+    th Year Level
+    th School
+    th Registered at
+    th Action
+  - users.each do |user|
+    tr.student
+      td.name = user.user_access
+      td.email = user.email
+      td.country = user.year_level
+      td.public_review = user.school
+      td.created_at = user.created_at.to_date.to_s(:long)
+      td = link_to "Edit"
+
+.chardin_box data-position='top' 
+  = will_paginate users, renderer: BootstrapPagination::Rails
