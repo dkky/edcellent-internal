@@ -1,0 +1,24 @@
+
+<p>
+  <strong>Name:</strong>
+  <%= @period.description %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @period.note %>
+</p>
+
+<p>
+  <strong>Start:</strong>
+  <%= @period.start_time %>
+</p>
+
+<p>
+  <strong>End:</strong>
+  <%= @period.end_time %>
+</p>
+
+
+<%= link_to 'Edit', edit_period_path(@period) %> |
+<%= link_to 'Back', periods_path %>

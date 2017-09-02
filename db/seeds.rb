@@ -26,7 +26,10 @@ tutor2 = User.create(first_name: 'Sam',last_name: 'S', email: 'sam@edcellent.com
 puts "#{User.where(user_access: 'tutor').count} tutors have been created."
 
 #create sessions
-session1 = Period.create(group_id: group1.id, tutor_id: tutor1.id, start_time: "2017-09-25 01:30 +05:30", end_time: "2017-09-25 02:30 +05:30")
+session1 = Period.create(description: 'EAL', note: 'student is good', group_id: group1.id, tutor_id: tutor1.id, start_time: "2017-09-10 01:30 +05:30", end_time: "2017-09-10 02:30 +05:30")
+session2 = Period.create(description: 'EAL', note: 'student is ok', group_id: group1.id, tutor_id: tutor1.id, start_time: "2017-09-11 01:30 +05:30", end_time: "2017-09-11 02:30 +05:30")
+session3 = Period.create(description: 'EAL', note: 'student is alright', group_id: group1.id, tutor_id: tutor1.id, start_time: "2017-09-11 01:30 +05:30", end_time: "2017-09-11 02:30 +05:30")
+session4 = Period.create(description: 'EAL', note: 'student is alright', group_id: group1.id, tutor_id: tutor1.id, start_time: "2017-09-11 01:30 +05:30", end_time: "2017-09-11 02:30 +05:30")
 puts "#{Period.all.count} students have been created."
 
 

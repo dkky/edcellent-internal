@@ -41,7 +41,8 @@ gem "clearance"
 gem 'filterrific'
 gem 'will_paginate'
 gem 'will_paginate-bootstrap'
-
+gem 'fullcalendar-rails'
+gem 'momentjs-rails'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
