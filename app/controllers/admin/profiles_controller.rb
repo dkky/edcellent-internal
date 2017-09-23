@@ -5,13 +5,17 @@ class Admin::ProfilesController < ApplicationController
   end
 
   def create
-    byebug
     @profile = Profile.new(strong_params)
     if @profile.save
-      puts "yeah"
+      byebug
+      redirect_to admin_user_path(params[:profile][:user_id])
     else
-      puts "no.."
+      render 'new'
     end
+  end
+
+  def edit
+    @profile = User.find(params[:id]).profile
   end
 
   def strong_params

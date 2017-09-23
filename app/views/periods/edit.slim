@@ -1,38 +1,29 @@
-h2 Create a session
+h1 Editing Lesson
 
 = bootstrap_form_for @period do |f|
-  .col-md-6
-    p
-    = f.text_field :start_time, label: 'What time does it start?', class: 'text-input',id: 'date-start',data: { index: "7"}
-  .col-md-6
-    p    
-    = f.text_field :end_time, label: 'What time does it end?', class: 'text-input',id: 'date-end',data: { index: "7"}
-  .col-md-6
-    p  
-    = f.text_field :subject, label: 'What subject is this?', class: 'text-input'
-  .col-md-6
-    p  
-    = f.text_field :description, label: 'Description (Optional)', class: 'text-input'
-  .col-md-6
-    p  
-    = f.text_area :note, label: 'Learning Outcome (Optional)',rows: '8',class: 'text-input'
-  .col-md-6
-    p
-      b Select Group/Student
-    = select_tag "groups", nil, id: 'power-search-2', class: "select-example-2", multiple: true
-    br
-    br
-  .col-md-6
-    p   
-      b Select Tutor
-    = f.select :tutor_id, User.tutor.map {|i| [i.name,i.id]}, { hide_label: true,prompt: 'Select Tutor'}, { id: 'individual_select'}   
-  .col-md-12
-    p
-      b Is the session completed?
-    = f.select :period_status, [{"Incomplete":1}, {"Done": 0}].map {|i| [i.keys[0], i.values[0]]}, { hide_label: true, prompt: 'Status'},{class: 'test',data: { index: "3"}}
-    = f.submit 'Done'
+  = f.text_field :start_time, label: 'What time does it start?', class: 'text-input',id: 'date-start',data: { index: "7"}
+  p    
+  = f.text_field :end_time, label: 'What time does it end?', class: 'text-input',id: 'date-end',data: { index: "7"}
+  p  
+  = f.text_field :subject, label: 'What subject is this?', class: 'text-input'
+  p  
+  = f.text_field :description, label: 'Description (Optional)', class: 'text-input'
+  p  
+  = f.text_field :note, label: 'Learning Outcome', class: 'text-input'
+  p
+    b Select Group/Student
+  = select_tag "groups", nil, id: 'power-search-2', class: "select-example-2", multiple: true
+  p   
+    b Select Tutor
+  = f.select :tutor_id, User.tutor.map {|i| [i.name,i.id]}, { hide_label: true,prompt: 'Select Tutor'}, { id: 'individual_select'}    
+  p
+    b Is the session completed?
+  = f.select :period_status, [{"Incomplete":1}, {"Done": 0}].map {|i| [i.keys[0], i.values[0]]}, { hide_label: true, prompt: 'Status'},{class: 'test',data: { index: "3"}}
+  = f.submit 'Done'
 
-
+= link_to 'Show', @period 
+br 
+= link_to 'Back', period_path 
 
 javascript:
 
@@ -72,6 +63,7 @@ javascript:
         },
         processResults: function (data, params) {
           return { results: $.map( data, function(client, i) {
+            debugger
               var displayResult = client.name 
                   return { id: client.id, text: displayResult}
               } ) };          
@@ -97,5 +89,4 @@ javascript:
 
     $.material.init()
   });
-
 

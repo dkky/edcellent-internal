@@ -25,12 +25,19 @@ tutor1 = User.create(first_name: 'Carolyn', last_name: 'Zhang',email: 'carolyn@e
 tutor2 = User.create(first_name: 'Sam',last_name: 'S', email: 'sam@edcellent.com',password: '12345678', user_access: 2)
 puts "#{User.where(user_access: 'tutor').count} tutors have been created."
 
+admin1 = User.create(first_name: 'Desmond',last_name: 'K', email: 'desmond@edcellent.com',password: '12345678', user_access: 0)
+puts "#{User.where(user_access: 'admin').count} admin have been created."
+
 #create sessions
-session1 = Period.create(description: 'EAL', note: 'student is good', group_id: group1.id, tutor_id: tutor1.id, start_time: "2017-09-10 01:30 +05:30", end_time: "2017-09-10 02:30 +05:30")
-session2 = Period.create(description: 'EAL', note: 'student is ok', group_id: group1.id, tutor_id: tutor1.id, start_time: "2017-09-11 01:30 +05:30", end_time: "2017-09-11 02:30 +05:30")
-session3 = Period.create(description: 'EAL', note: 'student is alright', group_id: group1.id, tutor_id: tutor1.id, start_time: "2017-09-11 01:30 +05:30", end_time: "2017-09-11 02:30 +05:30")
-session4 = Period.create(description: 'EAL', note: 'student is alright', group_id: group1.id, tutor_id: tutor1.id, start_time: "2017-09-11 01:30 +05:30", end_time: "2017-09-11 02:30 +05:30")
-puts "#{Period.all.count} students have been created."
+session1 = Period.create(period_status: 0, subject: 'EAL', description: 'listening text', note: 'student is good', group_id: group1.id, tutor_id: tutor1.id, start_time: "2017-09-10 01:30 +05:30", end_time: "2017-09-10 02:30 +05:30")
+session2 = Period.create(period_status: 0, subject: 'EAL', description: 'text response', note: 'student is ok', group_id: group1.id, tutor_id: tutor1.id, start_time: "2017-09-11 01:30 +05:30", end_time: "2017-09-11 02:30 +05:30")
+session3 = Period.create(period_status: 0, subject: 'EAL', description: 'essay', note: 'student is alright', group_id: group1.id, tutor_id: tutor1.id, start_time: "2017-09-11 01:30 +05:30", end_time: "2017-09-11 02:30 +05:30")
+session4 = Period.create(period_status: 0, subject: 'EAL', description: 'oral', note: 'student is alright', group_id: group1.id, tutor_id: tutor1.id, start_time: "2017-09-11 01:30 +05:30", end_time: "2017-09-11 02:30 +05:30")
+session5 = Period.create(period_status: 1, subject: 'EAL', description: 'oral', note: 'student is alright', group_id: group2.id, tutor_id: tutor2.id, start_time: "2017-09-12 01:30 +05:30", end_time: "2017-09-11 01:30 +05:30")
+session6 = Period.create(period_status: 1, subject: 'EAL', description: 'oral', note: 'student is alright', group_id: group2.id, tutor_id: tutor2.id, start_time: "2017-09-13 01:30 +05:30", end_time: "2017-09-11 05:30 +05:30")
+session7 = Period.create(period_status: 1, subject: 'EAL', description: 'oral', note: 'student is alright', group_id: group2.id, tutor_id: tutor2.id, start_time: "2017-09-14 01:30 +05:30", end_time: "2017-09-11 06:30 +05:30")
+session8 = Period.create(period_status: 1, subject: 'EAL', description: 'oral', note: 'student is alright', group_id: group2.id, tutor_id: tutor2.id, start_time: "2017-09-15 01:30 +05:30", end_time: "2017-09-11 07:30 +05:30")
+puts "#{Period.all.count} sessions have been created."
 
 
 puts "done"

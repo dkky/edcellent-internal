@@ -27,10 +27,6 @@ class User < ApplicationRecord
     where(year_level: year_level)
   }
 
-  scope :with_bootcamp_type, lambda {|bootcamp_type|
-    where(course: bootcamp_type)
-  }
-
   self.per_page = 10
 
   def self.options_for_select_user_access
@@ -38,7 +34,7 @@ class User < ApplicationRecord
   end
 
   def self.options_for_year_level
-    ['Year 10','Year 11','Year 12']
+    ['Year 10','Year 11','Year 12','Uni']
   end
 
 end

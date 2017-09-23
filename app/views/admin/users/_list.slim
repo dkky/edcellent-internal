@@ -21,7 +21,7 @@ table.table
       td.country = user.year_level
       td.public_review = user.school
       td.created_at = user.created_at.to_date.to_s(:long)
-      td = link_to "Edit"
+      td = link_to "Edit", edit_admin_user_path(user)
 
 .chardin_box data-position='top' 
   = will_paginate users, renderer: BootstrapPagination::Rails

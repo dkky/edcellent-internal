@@ -1,8 +1,4 @@
-h2 Create a User
-
 = bootstrap_form_for @user, url: admin_users_path(@user) do |f|
   = render partial: '/admin/users/form', locals: {f: f}
   = f.submit 'Next'
-
-
 

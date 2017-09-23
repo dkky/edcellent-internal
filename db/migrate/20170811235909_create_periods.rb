@@ -3,6 +3,7 @@ class CreatePeriods < ActiveRecord::Migration[5.1]
     create_table :periods do |t|
       t.string :description
       t.string :note
+      t.string :subject
       t.integer :tutor_id
       t.datetime :start_time
       t.datetime :end_time

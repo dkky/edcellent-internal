@@ -1,18 +1,65 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <%= javascript_include_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+
   <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+
+  <%= javascript_include_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
   <%= csrf_meta_tag %>
 </head>
+<div class="container-fluid">
+    <!-- Second navbar for sign in -->
+    <nav class="navbar navbar-default">
+      <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-2">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">Edcellent</a>
+        </div>
+    
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="navbar-collapse-2">
+          <ul class="nav navbar-nav navbar-right">
+            <% if current_user && current_user.admin? %>
+              <li><a href="/admin/periods">My Sessions</a></li>
+            <li><a href="/periods/search">Testing Normal Sessions</a></li>
+              <li><a href="/admin/users">Users</a></li>
+            <% else %>
+              <li><a href="/periods/search">My Sessions</a></li>
+            <% end %> 
+            <li><a href="#">Works</a></li>
+            <li><a href="#">News</a></li>
+            <% if signed_in? %>
+              <li>
+                <%= button_to t(".sign_out"), sign_out_path, class: "btn btn-default btn-outline btn-circle", method: :delete %>
+              </li>
+            <% else %>
+              <li>
+                <a class="btn btn-default btn-outline btn-circle collapsed"  data-toggle="collapse" href="#nav-collapse2" aria-expanded="false" aria-controls="nav-collapse2">Sign in</a>
+              </li>
+            <% end %>
+          </ul>
+          <div class="collapse nav navbar-nav nav-collapse slide-down" id="nav-collapse2">
+          <%= bootstrap_form_for :session, url: session_path, html: {class: "navbar-form navbar-right form-inline"} do |form| %>
+              <%= form.email_field :email, hide_label: true, placeholder: 'Email' %>
+              <%= form.password_field :password, hide_label: true, placeholder: 'Password' %>
+              <%= form.submit %>
+          <% end %>
+          </div>
+        </div><!-- /.navbar-collapse -->
+      </div><!-- /.container -->
+    </nav><!-- /.navbar -->
+</div><!-- /.container-fluid -->
+
 <body>
-  <div id="header">
-    <% if signed_in? -%>
-      <%= button_to t(".sign_out"), sign_out_path, method: :delete %>
-    <% else -%>
-      <%= link_to t(".sign_in"), sign_in_path %>
-    <% end -%>
-  </div>
+   
 
   <div id="flash">
     <% flash.each do |key, value| -%>

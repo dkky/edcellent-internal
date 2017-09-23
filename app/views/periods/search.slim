@@ -1,0 +1,27 @@
+.row
+  .jumbotron
+    h1.blue style="color:#2196F3;"  All sessions
+    h3.blue With You
+
+.well
+  = form_for_filterrific @filterrific do |f|
+    .row
+      .col-md-2
+        .form-group.chardin_box data-position='top'
+          label Status
+          = f.select :with_different_status,
+                     @filterrific.select_options[:with_different_status],
+                     { include_blank: '- Any -' },
+                     { class: 'form-control' }
+      .col-md-2
+        .form-group.chardin_box data-position='top'
+          label Group
+          = f.select :with_different_group,
+                     @filterrific.select_options[:with_different_group],
+                     { include_blank: '- Any -' },
+                     { class: 'form-control' }
+
+
+#results
+  = render partial: '/periods/list',
+           locals: { :periods => @periods }

@@ -4,7 +4,7 @@ class SessionsController < Clearance::SessionsController
 
     sign_in(@user) do |status|
       if status.success?
-        redirect_to new_periods_path
+        redirect_to root_path
       else
         flash.now.notice = status.failure_message
         render template: "sessions/new", status: :unauthorized

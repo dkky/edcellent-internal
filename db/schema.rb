@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(version: 20170820035546) do
   create_table "periods", force: :cascade do |t|
     t.string "description"
     t.string "note"
+    t.string "subject"
     t.integer "tutor_id"
     t.datetime "start_time"
     t.datetime "end_time"

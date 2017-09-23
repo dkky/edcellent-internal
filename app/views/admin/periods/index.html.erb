@@ -1,0 +1,34 @@
+<div>
+  <h1>Sessions</h1>
+
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th colspan="3"></th>
+      </tr>
+    </thead>
+  
+    <tbody>
+    <div id="all_sessions">
+      <% @periods.each do |period| %>
+        <tr id="session_<%= period.id %>">
+          <td><%= period.description %></td>
+          <td><%= period.note %></td>
+          <td><%= link_to 'Show', period %></td>
+          <td><%= link_to 'Edit', edit_period_path(period) %></td>
+          <td><%= link_to 'Duplicate', duplicate_session_path(period) %></td>
+          <% if period.incomplete? %>
+            <td><%= link_to 'Mark Complete', change_period_status_path(period), method: :get, remote: true %></td>
+          <% else %>
+            <td><%= link_to 'Mark Incomplete', change_period_status_path(period), method: :get, remote: true %></td>
+          <% end %>
+          <td><%= link_to 'Destroy', period, method: :delete, data: { confirm: 'Are you sure?' }, remote: true %></td>
+        </tr>
+     </div> 
+    <% end %> 
+    </tbody>
+  </table>
+</div>
+<br>

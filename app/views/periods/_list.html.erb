@@ -1,0 +1,78 @@
+<div class="well well-small">
+  <div class=pull-right data-position="bottom">
+    <%= link_to "Reset filters", reset_filterrific_url, class: 'btn btn-default btn-sm' %>
+  </div>  
+  <div class="chardin_box" data-position='bottom'>
+    <%= page_entries_info periods, model: 'session' %>
+  </div> 
+  <div class="chardin_box" data-position='bottom'>
+    <%= render_filterrific_spinner %>
+  </div>
+</div>
+
+
+<div class="row">
+  <% periods.each do |period| %>
+    <div class="col-md-4" id="session_<%= period.id %>">
+    <div class="card">
+      <div class="cnrflash">
+        <% if period.incomplete? %>
+          <div class="cnrflash-inner">
+              <span class="cnrflash-label">
+                INCOMPLETE
+                <br>
+              </span>
+          </div>
+        <% else %>
+          <div class="cnrflash-inner" style="background-color: black">
+              <span class="cnrflash-label">
+                COMPLETE
+                <br>
+              </span>
+          </div>          
+        <% end %>
+      </div>
+            <div class="card-content">
+              <div class="card-header-blue">
+                   <h1 class="card-heading"><%= period.description %></h1>
+                </div>
+                <div class="card-body">
+                <p class="card-p">
+                  Tutor: <%= period.user.name %>
+                </p>  
+                  <% period.group.users.each do |u| %>               
+                <p class="card-p">
+                  Student: <%= u.name %>
+                </p>
+                <% end %>
+                <p class="card-p">
+                  Start Time: <%= period.start_time %>
+                  End Time: <%= period.end_time %>
+                </p>  
+              </div>
+              
+              <nav class="nav-tabs">
+                <ul class="nav nav-pills pull-left">
+                        <li class="card-action"><%= link_to 'Show', period %></li>
+                        <li class="card-action"><%= link_to 'Duplicate', duplicate_session_path(period) %></li>
+                        <li class="card-action dropup">
+                          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><%= "#{period.period_status.capitalize}" %><span class="caret"></span></a>
+
+                          <ul class="dropdown-menu">
+                            <li><%= link_to "#{period.period_status.capitalize}", change_period_status_path(period), method: :get, remote: true %></li>
+                          </ul>
+                        <li class="card-action"><%= link_to 'Destroy', period, method: :delete, data: { confirm: 'Are you sure?' }, remote: true %></li>
+                    </ul>
+                
+              </nav>
+                
+            </div>
+        </div>
+    </div>
+  <% end %>
+</div>
+
+<div class="chardin_box" data-position='top'>
+  <%= will_paginate periods, renderer: BootstrapPagination::Rails %>
+</div>
+

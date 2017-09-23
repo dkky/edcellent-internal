@@ -6,7 +6,9 @@ class Admin::UsersController < ApplicationController
 
   def create
     if student_params["user_access"] == "student"
+      byebug
       user = User.new(student_params)
+      user.password = "123456"
       if group_params[:groups].is_i?
         # if it is a number, that means it exists in the database already
         group_id = group_params[:groups]
@@ -19,6 +21,7 @@ class Admin::UsersController < ApplicationController
       if user.save
         redirect_to new_admin_profile_path(user_id: user.id)
       else
+        @user = User.new
         render 'new'
       end
     else
@@ -43,14 +46,23 @@ class Admin::UsersController < ApplicationController
     end
   end
 
+  def show
+    @user = User.find(params[:id])
+  end
+
+  def edit
+    @user = User.find(params[:id])
+    render layout: 'admin'
+  end
+
   private
 
   def student_params
-    params.require(:user).permit(:name, :school, :user_access)
+    params.require(:user).permit(:first_name,:last_name, :school, :year_level, :user_access, :wechat_account, :phone_number, :email)
   end
 
   def user_params
-    params.require(:user).permit(:name, :user_access)
+    params.require(:user).permit(:first_name,:last_name,:name, :user_access, :wechat_account, :phone_number, :emails)
   end
 
   def group_params

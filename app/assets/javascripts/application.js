@@ -16,11 +16,12 @@
 //= require fullcalendar
 //= require bootstrap-sprockets
 //= require filterrific/filterrific-jquery
+//= require bootstrap-material-datetimepicker
 //= require select2
 
 
 $(document).ready(function() {
-  $('#calendar').fullCalendar({
+  $('#f-calendar').fullCalendar({
     buttonText: {
       listWeek: 'list - week',
       listDay: 'list - day',

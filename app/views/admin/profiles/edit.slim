@@ -1,0 +1,3 @@
+= bootstrap_form_for [:admin, @profile] do |f|
+  = render partial: "/admin/profiles/form", locals: {f: f}
+  = f.submit 'Done'
