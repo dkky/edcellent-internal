@@ -68,10 +68,13 @@ class PeriodsController < ApplicationController
   end
 
   def create
+    byebug
     period = Period.new(periods_params)
+    period.period_status = params[:period][:period_status].to_i
     period.group_id = params[:groups][0]
     if period.save
-      redirect_to period
+      redirect_to new_event_url(calendar_id: "noone.knowu@gmail.com", details: period.id)
+      # pass the period id so that can pass the details to be saved in google calendar
     else
     end
   end
@@ -116,7 +119,7 @@ class PeriodsController < ApplicationController
   private
 
   def periods_params
-    params.require(:period).permit(:start_time, :end_time,:subject, :description, :note, :tutor_id, :period_status)
+    params.require(:period).permit(:start_time, :end_time,:subject, :description, :note, :tutor_id)
   end
 
   def check_access

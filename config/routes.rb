@@ -29,4 +29,10 @@ Rails.application.routes.draw do
     resources :periods
   end
 
+  get '/redirect', to: 'examples#redirect', as: 'redirect'
+  get '/callback', to: 'examples#callback', as: 'callback'
+  get '/calendars', to: 'examples#calendars', as: 'calendars'
+  get '/events/:calendar_id', to: 'examples#events', as: 'events', calendar_id: /[^\/]+/
+  get '/new_events/:calendar_id/periods/:details', to: 'examples#new_event', as: 'new_event', calendar_id: /[^\/]+/
+
 end

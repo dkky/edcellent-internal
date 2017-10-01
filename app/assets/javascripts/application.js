@@ -14,11 +14,30 @@
 //= require jquery_ujs
 //= require moment
 //= require fullcalendar
+//= require fullcalendar/gcal
 //= require bootstrap-sprockets
 //= require filterrific/filterrific-jquery
 //= require bootstrap-material-datetimepicker
 //= require select2
 
+// AIzaSyB1iR2eo3a_Ewc_kH6Yns1u0bPqKvpaEGI
+
+// $(document).ready(function() {
+//   debugger
+//   $('#f-calendar').fullCalendar({
+//       googleCalendarApiKey: 'AIzaSyB1iR2eo3a_Ewc_kH6Yns1u0bPqKvpaEGI',
+//       events: {
+//         googleCalendarId: 'noone.knowu@gmail.com',
+//         className: 'gcal-event' // an option!
+//       },
+//       eventRender: function(event, element) { 
+//       element.find(".fc-time").remove();
+//       element.find('.fc-title').append("<br/>" + moment(event.start).format("HH:mm")  + '-' + moment(event.end).format("HH:mm") + "<br/>"); 
+//       element.find('.fc-list-item-title').append(event.tutor + "<br/>" + event.student); 
+//       element.find('.fc-content').append('TUTOR: ' + event.tutor + "<br/>" + event.student); 
+//     },
+//   });
+// });
 
 $(document).ready(function() {
   $('#f-calendar').fullCalendar({

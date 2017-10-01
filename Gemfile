@@ -43,6 +43,9 @@ gem 'will_paginate'
 gem 'will_paginate-bootstrap'
 gem 'fullcalendar-rails'
 gem 'momentjs-rails'
+gem 'figaro'
+gem 'google-api-client', require: 'google/apis/calendar_v3'
+
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
