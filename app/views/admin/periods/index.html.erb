@@ -1,34 +1,69 @@
-<div>
-  <h1>Sessions</h1>
+<p><%= link_to 'Create a New Session', new_period_path %></p>
 
-  <table class="table table-hover">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-        <th colspan="3"></th>
-      </tr>
-    </thead>
-  
-    <tbody>
-    <div id="all_sessions">
-      <% @periods.each do |period| %>
-        <tr id="session_<%= period.id %>">
-          <td><%= period.description %></td>
-          <td><%= period.note %></td>
-          <td><%= link_to 'Show', period %></td>
-          <td><%= link_to 'Edit', edit_period_path(period) %></td>
-          <td><%= link_to 'Duplicate', duplicate_session_path(period) %></td>
-          <% if period.incomplete? %>
-            <td><%= link_to 'Mark Complete', change_period_status_path(period), method: :get, remote: true %></td>
-          <% else %>
-            <td><%= link_to 'Mark Incomplete', change_period_status_path(period), method: :get, remote: true %></td>
-          <% end %>
-          <td><%= link_to 'Destroy', period, method: :delete, data: { confirm: 'Are you sure?' }, remote: true %></td>
-        </tr>
-     </div> 
-    <% end %> 
-    </tbody>
-  </table>
+<h1>Sessions</h1>
+
+
+<div class="well">
+  <%= form_for_filterrific @filterrific do |f| %>
+    <div class="row">
+      <div class="col-md-1">
+        <div class="form-group chardin_box" data-position='top'>
+          <label> Status </label>
+          <%= f.select :with_different_status,
+                   @filterrific.select_options[:with_different_status],
+                   { include_blank: '- Any -' },
+                   { class: 'form-control' }
+          %>
+        </div>
+      </div>
+
+      <div class="col-md-2">
+        <div class="form-group chardin_box" data-position='top'>               
+          <label> Group Name </label>
+          <%= f.select :with_different_group,
+                   @filterrific.select_options[:with_different_group],
+                   { include_blank: '- Any -' },
+                   { class: 'form-control' }
+          %>
+        </div>
+      </div>
+
+      <div class="col-md-2">
+        <div class="form-group chardin_box" data-position='top'>               
+          <label> Group Type </label>
+          <%= f.select :with_different_grouping,
+                     @filterrific.select_options[:with_different_grouping],
+                     { include_blank: '- Any -' }, 
+                     { class: 'form-control' }     
+          %>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="form-group chardin_box" data-position='top'>               
+          <label> From </label>
+          <%= f.text_field :with_start_date,
+                     { class: 'form-control js-datepicker' } 
+          %>
+        </div>
+      </div>      
+
+      <div class="col-md-2">
+        <div class="form-group chardin_box" data-position='top'>               
+          <label> Until </label>
+          <%= f.text_field :with_end_date,
+                     { class: 'form-control js-datepicker' } 
+          %>
+        </div>
+      </div>
+    </div>
+  <% end %>
 </div>
 <br>
+
+<div id="results">
+  <%= render partial: 'admin/periods/list', locals: { :periods => @periods } %>
+</div>
+
+<script type="text/javascript">
+  $('.js-datepicker').datepicker();
+</script>

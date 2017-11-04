@@ -1,0 +1,2 @@
+$("#session_<%= @period.id %> td:nth-child(6) a").text("Undo <%= @period.period_status.capitalize %>")
+$("#session_<%= @period.id %> td:nth-child(6) a").attr('href', "/admin/period/change_status/<%= @period.id %>")

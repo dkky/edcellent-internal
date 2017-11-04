@@ -15,32 +15,16 @@
 //= require moment
 //= require fullcalendar
 //= require fullcalendar/gcal
+//= require turbolinks
 //= require bootstrap-sprockets
 //= require filterrific/filterrific-jquery
 //= require bootstrap-material-datetimepicker
+//= require bootstrap-wysihtml5
+//= require bootstrap-datepicker
 //= require select2
 
-// AIzaSyB1iR2eo3a_Ewc_kH6Yns1u0bPqKvpaEGI
-
-// $(document).ready(function() {
-//   debugger
-//   $('#f-calendar').fullCalendar({
-//       googleCalendarApiKey: 'AIzaSyB1iR2eo3a_Ewc_kH6Yns1u0bPqKvpaEGI',
-//       events: {
-//         googleCalendarId: 'noone.knowu@gmail.com',
-//         className: 'gcal-event' // an option!
-//       },
-//       eventRender: function(event, element) { 
-//       element.find(".fc-time").remove();
-//       element.find('.fc-title').append("<br/>" + moment(event.start).format("HH:mm")  + '-' + moment(event.end).format("HH:mm") + "<br/>"); 
-//       element.find('.fc-list-item-title').append(event.tutor + "<br/>" + event.student); 
-//       element.find('.fc-content').append('TUTOR: ' + event.tutor + "<br/>" + event.student); 
-//     },
-//   });
-// });
-
-$(document).ready(function() {
-  $('#f-calendar').fullCalendar({
+function eventCalendar() {
+  return $('#f-calendar').fullCalendar({
     buttonText: {
       listWeek: 'list - week',
       listDay: 'list - day',
@@ -77,9 +61,23 @@ $(document).ready(function() {
           type: 'PUT',
           url: '/periods/' + event.id,
           dataType: 'json',
-          data: { lesson: { start_time: new Date(event.start).toUTCString(), end_time: new Date(event.end).toUTCString()  } }
+          data: { 
+            period: { 
+              start_time: event.start.format(), 
+              end_time: event.end.format()
+            } 
+          }
         });
     }
   });
-});
+};
+
+function clearCalendar() {
+  $('#f-calendar').fullCalendar('delete'); // In case delete doesn't work.
+  $('#f-calendar').html('');
+};
+
+$(document).on('turbolinks:load', eventCalendar);
+$(document).on('turbolinks:before-cache', clearCalendar);
+
 

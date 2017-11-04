@@ -1,4 +1,6 @@
 class Admin::UsersController < ApplicationController
+  respond_to :html, :json
+
   def new
     @user = User.new
     render layout: 'admin'
@@ -6,9 +8,8 @@ class Admin::UsersController < ApplicationController
 
   def create
     if student_params["user_access"] == "student"
-      byebug
-      user = User.new(student_params)
-      user.password = "123456"
+      @user = User.new(student_params)
+      @user.password = "123456"
       if group_params[:groups].is_i?
         # if it is a number, that means it exists in the database already
         group_id = group_params[:groups]
@@ -17,16 +18,22 @@ class Admin::UsersController < ApplicationController
         group = Group.create(name: group_params[:groups])
         group_id = group.id
       end
-      user.group_id = group_id  
-      if user.save
-        redirect_to new_admin_profile_path(user_id: user.id)
+      @user.group_id = group_id  
+      if @user.save
+        redirect_to new_admin_profile_path(user_id: @user.id)
       else
         @user = User.new
         render 'new'
       end
     else
+      @user = User.new(user_params)
+      @user.password = "123456"
+      if @user.save
+        redirect_to new_admin_profile_path(user_id: @user.id)
+      else
+        render 'new'
+      end
     end
-
   end
 
   def index
@@ -35,7 +42,7 @@ class Admin::UsersController < ApplicationController
       params[:filterrific],
       select_options: {
         with_user_access: User.options_for_select_user_access,
-        with_year_level: User.options_for_year_level,
+        with_year_level: User.options_for_year_level
       },
     ) or return
     @users = @filterrific.find.page(params[:page])
@@ -55,6 +62,11 @@ class Admin::UsersController < ApplicationController
     render layout: 'admin'
   end
 
+  def select2_list_student
+    @users = User.student
+    render json: @users
+  end
+
   private
 
   def student_params
@@ -62,7 +74,7 @@ class Admin::UsersController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:first_name,:last_name,:name, :user_access, :wechat_account, :phone_number, :emails)
+    params.require(:user).permit(:first_name,:last_name,:name, :user_access, :wechat_account, :phone_number, :email, :user_type)
   end
 
   def group_params

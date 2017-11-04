@@ -1,3 +1,6 @@
+p
+  = link_to 'Create a New Session', new_period_path 
+  s
 .row
   .jumbotron
     h1.blue style="color:#2196F3;"  All sessions
@@ -13,15 +16,37 @@
                      @filterrific.select_options[:with_different_status],
                      { include_blank: '- Any -' },
                      { class: 'form-control' }
-      .col-md-2
+      .col-md-3
         .form-group.chardin_box data-position='top'
-          label Group
+          label Group Name
           = f.select :with_different_group,
                      @filterrific.select_options[:with_different_group],
                      { include_blank: '- Any -' },
-                     { class: 'form-control' }
+                     { class: 'form-control' }      
+      .col-md-2
+        .form-group.chardin_box data-position='top'
+          label Group Type
+          = f.select :with_different_grouping,
+                     @filterrific.select_options[:with_different_grouping],
+                     { include_blank: '- Any -' }, 
+                     { class: 'form-control' }      
+      .col-md-2
+        .form-group.chardin_box data-position='top'
+          label From
+          = f.text_field :with_start_date,
+                     { class: 'form-control js-datepicker' }      
+
+      .col-md-2
+        .form-group.chardin_box data-position='top'
+          label Until
+          = f.text_field :with_end_date,
+                     { class: 'form-control js-datepicker' }
 
 
 #results
   = render partial: '/periods/list',
            locals: { :periods => @periods }
+
+  javascript:
+
+    $('.js-datepicker').datepicker();

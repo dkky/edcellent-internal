@@ -7,9 +7,10 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 #create groups
-group1 = Group.create(name: 'First Group')
-group2 = Group.create(name: 'Individual 1')
-group3 = Group.create(name: 'Individual 2')
+group1 = Group.create(name: 'James, Arthur & Kim', group_status: 0)
+group2 = Group.create(name: 'Tim Li', group_status: 0)
+group3 = Group.create(name: 'James Li', group_status: 0)
+random_group1 = Group.create(name: 'Tim & Kenny (Temporary 1)', group_status: 1)
 puts "#{Group.all.count} groups have been created."
 #create students
 student1 = group2.users.create(first_name: 'Tim', last_name: 'Li', email: 'tim@edcellent.com',password: '12345678',user_access: 1, school: 'Wesley', year_level: 'Year 11', wechat_account: 'hehe1', phone_number: '0417313112')
@@ -19,25 +20,26 @@ student4 = group1.users.create(first_name: 'Arthur',last_name: 'Li', email: 'art
 student5 = group1.users.create(first_name: 'Kim',last_name: 'Li',email: 'kim@edcellent.com',password: '12345678', user_access: 1, school: 'Wesley', year_level: 'Year 11', wechat_account: 'hehe5', phone_number: '0417313116')
 puts "#{User.where(user_access: 'student').count} students have been created."
 
-
 #create tutors
 tutor1 = User.create(first_name: 'Carolyn', last_name: 'Zhang',email: 'carolyn@edcellent.com',password: '12345678', user_access: 2)
 tutor2 = User.create(first_name: 'Sam',last_name: 'S', email: 'sam@edcellent.com',password: '12345678', user_access: 2)
+tutor3 = User.create(first_name: 'Wynn',last_name: 'Chen', email: 'wynn@edcellent.com',password: '12345678', user_access: 2)
+tutor4 = User.create(first_name: 'Mary',last_name: 'M', email: 'mary@edcellent.com',password: '12345678', user_access: 2)
 puts "#{User.where(user_access: 'tutor').count} tutors have been created."
 
 admin1 = User.create(first_name: 'Desmond',last_name: 'K', email: 'desmond@edcellent.com',password: '12345678', user_access: 0)
+admin2 = User.create(first_name: 'Carlyn',last_name: 'K', email: 'carlyn@edcellent.com',password: '12345678', user_access: 0)
 puts "#{User.where(user_access: 'admin').count} admin have been created."
 
 #create sessions
-session1 = Period.create(period_status: 0, subject: 'EAL', description: 'listening text', note: 'student is good', group_id: group1.id, tutor_id: tutor1.id, start_time: "2017-09-10 01:30 +05:30", end_time: "2017-09-10 02:30 +05:30")
-session2 = Period.create(period_status: 0, subject: 'EAL', description: 'text response', note: 'student is ok', group_id: group1.id, tutor_id: tutor1.id, start_time: "2017-09-11 01:30 +05:30", end_time: "2017-09-11 02:30 +05:30")
-session3 = Period.create(period_status: 0, subject: 'EAL', description: 'essay', note: 'student is alright', group_id: group1.id, tutor_id: tutor1.id, start_time: "2017-09-11 01:30 +05:30", end_time: "2017-09-11 02:30 +05:30")
-session4 = Period.create(period_status: 0, subject: 'EAL', description: 'oral', note: 'student is alright', group_id: group1.id, tutor_id: tutor1.id, start_time: "2017-09-11 01:30 +05:30", end_time: "2017-09-11 02:30 +05:30")
-session5 = Period.create(period_status: 1, subject: 'EAL', description: 'oral', note: 'student is alright', group_id: group2.id, tutor_id: tutor2.id, start_time: "2017-09-12 01:30 +05:30", end_time: "2017-09-11 01:30 +05:30")
-session6 = Period.create(period_status: 1, subject: 'EAL', description: 'oral', note: 'student is alright', group_id: group2.id, tutor_id: tutor2.id, start_time: "2017-09-13 01:30 +05:30", end_time: "2017-09-11 05:30 +05:30")
-session7 = Period.create(period_status: 1, subject: 'EAL', description: 'oral', note: 'student is alright', group_id: group2.id, tutor_id: tutor2.id, start_time: "2017-09-14 01:30 +05:30", end_time: "2017-09-11 06:30 +05:30")
-session8 = Period.create(period_status: 1, subject: 'EAL', description: 'oral', note: 'student is alright', group_id: group2.id, tutor_id: tutor2.id, start_time: "2017-09-15 01:30 +05:30", end_time: "2017-09-11 07:30 +05:30")
+session1 = Period.create(period_status: 0, subject: 'EAL', description: 'listening text', note: 'student is good', group_id: group1.id, tutor_id: tutor1.id, start_time: "2017-09-30T13:30:00+10:00", end_time: "2017-09-30T15:00:00+10:00")
+session2 = Period.create(period_status: 0, subject: 'EAL', description: 'text response', note: 'student is ok', group_id: group1.id, tutor_id: tutor1.id, start_time: "2017-10-01T13:30:00+10:00", end_time: "2017-10-01T15:00:00+10:00")
+session3 = Period.create(period_status: 0, subject: 'EAL', description: 'essay', note: 'student is alright', group_id: group1.id, tutor_id: tutor1.id, start_time: "2017-09-30T13:30:00+10:00", end_time: "2017-09-30T15:00:00+10:00")
+session4 = Period.create(period_status: 0, subject: 'EAL', description: 'oral', note: 'student is alright', group_id: group1.id, tutor_id: tutor1.id, start_time: "2017-10-03T09:30:00+10:00", end_time: "2017-10-03T12:00:00+10:00")
+session5 = Period.create(period_status: 1, subject: 'EAL', description: 'oral', note: 'student is alright', group_id: group2.id, tutor_id: tutor2.id, start_time: "2017-10-03T13:30:00+10:00", end_time: "2017-10-03T15:00:00+10:00")
+session6 = Period.create(period_status: 1, subject: 'EAL', description: 'oral', note: 'student is alright', group_id: group3.id, tutor_id: tutor3.id, start_time: "2017-10-04T13:30:00+10:00", end_time: "2017-10-04T15:00:00+10:00")
+session7 = Period.create(period_status: 1, subject: 'EAL', description: 'oral', note: 'student is alright', group_id: group3.id, tutor_id: tutor4.id, start_time: "2017-10-05T13:30:00+10:00", end_time: "2017-10-05T15:00:00+10:00")
+session8 = Period.create(period_status: 1, subject: 'EAL', description: 'oral', note: 'student is alright', group_id: random_group1.id, tutor_id: tutor2.id, start_time: "2017-10-06T13:30:00+10:00", end_time: "2017-10-06T15:00:00+10:00")
 puts "#{Period.all.count} sessions have been created."
-
 
 puts "done"

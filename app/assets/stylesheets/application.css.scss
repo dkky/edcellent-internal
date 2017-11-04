@@ -4,8 +4,13 @@
 @import "bootstrap";
 @import "font-awesome";
 @import "rails_bootstrap_forms";
+@import "bootstrap-wysihtml5/bootstrap3-wysihtml5";
+@import "bootstrap-wysihtml5/index";
 @import "periods";
 @import "bootstrap-material-datetimepicker";
+@import "bootstrap-datepicker";
+@import "user";
+
 
 .navbar-brand { 
   position: relative; z-index: 2; 

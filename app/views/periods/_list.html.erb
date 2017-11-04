@@ -38,7 +38,7 @@
                 </div>
                 <div class="card-body">
                 <p class="card-p">
-                  Tutor: <%= period.user.name %>
+                  Tutor: <%= period.tutor.name %>
                 </p>  
                   <% period.group.users.each do |u| %>               
                 <p class="card-p">
@@ -46,22 +46,27 @@
                 </p>
                 <% end %>
                 <p class="card-p">
-                  Start Time: <%= period.start_time %>
-                  End Time: <%= period.end_time %>
+                  Start Time: <%= period.start_time.to_formatted_s(:long)   %>
+                </p>                
+                <p class="card-p">
+                  End Time: <%= period.end_time.to_formatted_s(:long)   %>
                 </p>  
+
               </div>
               
               <nav class="nav-tabs">
                 <ul class="nav nav-pills pull-left">
-                        <li class="card-action"><%= link_to 'Show', period %></li>
-                        <li class="card-action"><%= link_to 'Duplicate', duplicate_session_path(period) %></li>
+                        <li class="card-action"><%= link_to period do %><i class="fa fa-eye"></i><% end %></li>
+                        <li class="card-action"><%= link_to duplicate_session_path(period) do %><i class="fa fa-clone"></i><% end %></li>
+                            <li class="card-action"><%= link_to  period, method: :delete, data: { confirm: 'Are you sure?' }, remote: true do %><i class="fa fa-trash-o"></i><% end %></li>
                         <li class="card-action dropup">
                           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><%= "#{period.period_status.capitalize}" %><span class="caret"></span></a>
 
                           <ul class="dropdown-menu">
-                            <li><%= link_to "#{period.period_status.capitalize}", change_period_status_path(period), method: :get, remote: true %></li>
+                            <li><strong>Change to</strong></li>
+                            <li><%= link_to "#{(Period.period_statuses.keys - [period.period_status])[0].capitalize}", change_period_status_path(period), method: :get, remote: true %></li>
                           </ul>
-                        <li class="card-action"><%= link_to 'Destroy', period, method: :delete, data: { confirm: 'Are you sure?' }, remote: true %></li>
+                    
                     </ul>
                 
               </nav>

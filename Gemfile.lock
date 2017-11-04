@@ -1,10 +1,24 @@
 GIT
+  remote: git://github.com/Nerian/bootstrap-datepicker-rails.git
+  revision: 94fc769914455f6f505b467011649d76b13ea112
+  specs:
+    bootstrap-datepicker-rails (1.7.1.1)
+      railties (>= 3.0)
+
+GIT
   remote: https://github.com/NextAcademy/bootstrap-sass.git
   revision: c62b2a3c794ddcbf5e00a30f0db44318e4ff548a
   specs:
     bootstrap-sass (3.3.6)
       autoprefixer-rails (>= 5.2.1)
       sass (>= 3.3.4)
+
+GIT
+  remote: https://github.com/mbleigh/acts-as-taggable-on.git
+  revision: 4d9a10c25e106bd2467662baea58510a17809ca2
+  specs:
+    acts-as-taggable-on (5.0.0)
+      activerecord (>= 4.2.8)
 
 GEM
   remote: https://rubygems.org/
@@ -53,6 +67,8 @@ GEM
       execjs
     bcrypt (3.1.11)
     bindex (0.5.0)
+    bootstrap-wysihtml5-rails (0.3.3.8)
+      railties (>= 3.0)
     bootstrap_form (2.7.0)
     builder (3.2.3)
     byebug (9.0.6)
@@ -245,7 +261,10 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  acts-as-taggable-on!
+  bootstrap-datepicker-rails!
   bootstrap-sass (~> 3.3.4)!
+  bootstrap-wysihtml5-rails
   bootstrap_form
   byebug
   clearance

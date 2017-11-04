@@ -1,0 +1,45 @@
+
+<div class="well well-small">
+  <div class=pull-right data-position="bottom">
+    <%= link_to "Reset filters", reset_filterrific_url, class: 'btn btn-default btn-sm' %>
+  </div>  
+  <div class="chardin_box" data-position='bottom'>
+    <%= page_entries_info periods, model: 'session' %>
+  </div> 
+  <div class="chardin_box" data-position='bottom'>
+    <%= render_filterrific_spinner %>
+  </div>
+</div>
+
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+  <div id="all_sessions">
+    <% @periods.each do |period| %>
+      <tr id="session_<%= period.id %>">
+        <td><%= period.title %></td>
+        <td><%= period.description %></td>
+        <% if period.incomplete? %>
+          <td><%= link_to 'Undo Incomplete', admin_change_period_status_path(period), method: :get, remote: true %></td>
+        <% else %>
+          <td><%= link_to 'Undo Done', admin_change_period_status_path(period), method: :get, remote: true %></td>
+        <% end %>
+        <td class="icon-padding"><%= link_to period do %><i class="fa fa-eye"></i><% end %></td>
+        <td class="icon-padding"><%= link_to edit_period_path(period) do %><i class="fa fa-pencil-square-o"></i><% end %></td>
+        <td class="icon-padding"><%= link_to duplicate_session_path(period) do %><i class="fa fa-clone"></i><% end %></td>
+        <td class="icon-padding"><%= link_to admin_period_path(period), method: :delete, data: { confirm: 'Are you sure?' }, remote: true do %><i class="fa fa-trash-o"></i><% end %></td>
+      </tr>
+   </div> 
+  <% end %> 
+  </tbody>
+</table>
+
+<div class="chardin_box" data-position='top'>
+  <%= will_paginate periods, renderer: BootstrapPagination::Rails %>
+</div>

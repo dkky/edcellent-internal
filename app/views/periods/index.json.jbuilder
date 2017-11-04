@@ -1,6 +1,6 @@
 json.array!(@periods) do |period|
   json.extract! period, :id, :note, :description
-  json.tutor period.user.name
+  json.tutor period.tutor.name
   array = []
   period.group.users.each do |user|
     array << user.name

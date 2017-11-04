@@ -20,7 +20,11 @@ Rails.application.routes.draw do
   end
   get "/session/duplicate" => "periods#duplicate", as: "duplicate_session"
   get "/period/change_status/:id" => "periods#change_status", as: "change_period_status"
+  get "/admin/period/change_status/:id" => "admin/periods#change_status", as: "admin_change_period_status"
   get "/periods/calendar" => "periods#calendar", as: "sessions_calendar"
+
+
+  get '/admin/users/select2_list_student' => 'admin/users#select2_list_student'
 
   namespace :admin do
     resources :users
@@ -29,10 +33,10 @@ Rails.application.routes.draw do
     resources :periods
   end
 
-  get '/redirect', to: 'examples#redirect', as: 'redirect'
-  get '/callback', to: 'examples#callback', as: 'callback'
-  get '/calendars', to: 'examples#calendars', as: 'calendars'
-  get '/events/:calendar_id', to: 'examples#events', as: 'events', calendar_id: /[^\/]+/
-  get '/new_events/:calendar_id/periods/:details', to: 'examples#new_event', as: 'new_event', calendar_id: /[^\/]+/
+  get '/redirect', to: 'gevents#redirect', as: 'redirect'
+  get '/callback', to: 'gevents#callback', as: 'callback'
+  get '/calendars', to: 'gevents#calendars', as: 'calendars'
+  get '/events/:calendar_id', to: 'gevents#events', as: 'events', calendar_id: /[^\/]+/
+  get '/new_events/:calendar_id/periods/:details', to: 'gevents#create', as: 'new_event', calendar_id: /[^\/]+/
 
 end

@@ -1,6 +1,8 @@
 class Period < ApplicationRecord
-  belongs_to :user, class_name: "User", foreign_key: :tutor_id
+  belongs_to :tutor, class_name: "User", foreign_key: :tutor_id
   belongs_to :group
+  acts_as_taggable # Alias for acts_as_taggable_on :tags
+  acts_as_taggable_on :groupings
 
   enum period_status: [:done, :incomplete]
 
@@ -9,6 +11,9 @@ class Period < ApplicationRecord
     available_filters: [
       :with_different_status,
       :with_different_group,
+      :with_different_grouping,
+      :with_start_date,
+      :with_end_date
     ]
   )
 
@@ -24,6 +29,17 @@ class Period < ApplicationRecord
     where(group_id: group)
   }
 
+  scope :with_different_grouping, lambda {|grouping|
+    tagged_with(grouping)
+  }
+
+  scope :with_start_date, lambda { |ref_date|
+    where('periods.start_time >= ?', ref_date)
+  }  
+  
+  scope :with_end_date, lambda { |ref_date|
+    where('periods.end_time <= ?', ref_date)
+  }
 
   self.per_page = 10
 
@@ -38,5 +54,32 @@ class Period < ApplicationRecord
 
   def self.options_for_different_group(user)
     user.periods.map {|period| [period.group.name,period.group.id]}.uniq
+  end  
+
+  def self.options_for_different_group_admin
+    Period.all.map {|period| [period.group.name,period.group.id]}.uniq
   end
+
+  def self.options_for_tagging
+    ActsAsTaggableOn::Tagging.includes(:tag).where(context: 'groupings').pluck(:name).uniq
+  end
+
+  # def self.session_number(session_num)
+  #   if session_num <= 10
+  #     return session_num
+  #   elsif session_num > 10 && session_num < 20
+  #     session_num = session_num % 10
+  #     return session_num
+  #   elsif session_num == 20
+  #     return 10
+  #   elsif session_num > 20 && session_num < 30
+  #     session_num = session_num % 20
+  #     return session_num
+  #   elsif session_num == 30
+  #     return 10
+  #   elsif session_num > 20 && session_num < 30
+  #     session_num = session_num % 20
+  #     return session_num
+  #   end
+  # end
 end

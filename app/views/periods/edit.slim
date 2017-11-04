@@ -4,15 +4,33 @@ h1 Editing Lesson
   = f.text_field :start_time, label: 'What time does it start?', class: 'text-input',id: 'date-start',data: { index: "7"}
   p    
   = f.text_field :end_time, label: 'What time does it end?', class: 'text-input',id: 'date-end',data: { index: "7"}
-  p  
-  = f.text_field :subject, label: 'What subject is this?', class: 'text-input'
+  p   
+    b Select Subject
+  = f.select :subject, ["EAL","Accounting","Science"], { hide_label: true,prompt: 'Select Subject'}, { id: 'individual_select'}  
   p  
   = f.text_field :description, label: 'Description (Optional)', class: 'text-input'
   p  
   = f.text_field :note, label: 'Learning Outcome', class: 'text-input'
   p
-    b Select Group/Student
-  = select_tag "groups", nil, id: 'power-search-2', class: "select-example-2", multiple: true
+    b Your students: 
+    - @period.group.users.each do |user|
+      = user.name
+  br
+  p
+    b Change? if no changes, please leave this alone.
+  = select_tag "class_type", options_for_select(["fixed group","random group"]), prompt: "Change students"
+  br
+  #power-search-fixed-group-div
+    p
+      b Select Fixed Group
+    = select_tag "groups", nil, id: 'power-search-fixed-group', class: "select-example-2", multiple: true
+    br
+    br  
+  #power-search-random-group-div
+    p
+      b Select Temporary Group
+    = select_tag "groups", nil, id: 'power-search-random-group', class: "select-example-3", multiple: true
+    br
   p   
     b Select Tutor
   = f.select :tutor_id, User.tutor.map {|i| [i.name,i.id]}, { hide_label: true,prompt: 'Select Tutor'}, { id: 'individual_select'}    
@@ -28,17 +46,18 @@ br
 javascript:
 
   $(document).ready(function(){
-      $('#class_type_select').on('change', function() {
-        if (this.value == "Individual")
-        {
-          $("#group_select").hide();
-          $("#individual_select").toggle();
-        } else {
-          $("#individual_select").hide();
-          $("#group_select").toggle();
-        }
-      });
+    $('#class_type').on('change', function() {
+      if (this.value == "fixed group")
+      {
+        $("#power-search-random-group-div").hide();
+        $("#power-search-fixed-group-div").toggle();
+      } else {
+        $("#power-search-fixed-group-div").hide();
+        $("#power-search-random-group-div").toggle();
+      }
+    });
   });
+
 
   $(document).ready(function(){
     $(".select-example-2").select2({
@@ -63,8 +82,38 @@ javascript:
         },
         processResults: function (data, params) {
           return { results: $.map( data, function(client, i) {
-            debugger
               var displayResult = client.name 
+                  return { id: client.id, text: displayResult}
+              } ) };          
+        }
+      },
+    });
+  });
+
+  $(document).ready(function(){
+    $(".select-example-3").select2({
+      maximumSelectionLength: 10,
+      placeholder: "Select Student",
+      createTag: function (params) {
+        return {
+          id: params.term,
+          text: params.term,
+          newOption: false
+        }
+      },
+      ajax: {
+        url: "/admin/users/select2_list_student",
+        dataType: 'json',
+        delay: 250,
+        data: function (params) {
+          return {
+            q: params.term, // search term
+            page: params.page
+          };
+        },
+        processResults: function (data, params) {
+          return { results: $.map( data, function(client, i) {
+              var displayResult = client.first_name + ' ' + client.last_name 
                   return { id: client.id, text: displayResult}
               } ) };          
         }

@@ -1,2 +1,5 @@
-$("#session_<%= @period.id %> td:nth-child(6) a").text("Mark <%= @period.period_status.capitalize %>")
-$("#session_<%= @period.id %> td:nth-child(6) a").attr('href', "/period/change_status/<%= @period.id %>")
+// $('#session_<%= @period.id %> li.dropup .dropdown-menu').slideToggle()
+$('#session_<%= @period.id %> li.dropup .dropdown-toggle').html("<%= @period.period_status.capitalize %><span class='caret'></span>")
+$('#session_<%= @period.id %> li.dropup .dropdown-menu a').text("Undo <%= @period.period_status.capitalize %>")
+$('#session_<%= @period.id %> li.dropup .dropdown-menu a').attr('href', "/period/change_status/<%= @period.id %>")
+// $('#session_<%= @period.id %>  li.dropup .dropdown-menu').slideToggle()

@@ -4,7 +4,7 @@ h2
   h2/
 
 = bootstrap_form_for [:admin, @profile] do |f|
-  = render partial: "admin/profile/form", locals: {f: f}
+  = render partial: "admin/profiles/form", locals: {f: f}
   = f.hidden_field :user_id, :value => @user.id
   = f.submit 'Done'
 

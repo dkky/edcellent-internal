@@ -8,25 +8,38 @@ h2 Create a session
     p    
     = f.text_field :end_time, label: 'What time does it end?', class: 'text-input',id: 'date-end',data: { index: "7"}
   .col-md-6
-    p  
-    = f.text_field :subject, label: 'What subject is this?', class: 'text-input'
+    p   
+      b Select Subject
+    = f.select :subject, ["EAL","Accounting","Science"], { hide_label: true,prompt: 'Select Subject'}, { id: 'individual_select'}  
   .col-md-6
     p  
     = f.text_field :description, label: 'Description (Optional)', class: 'text-input'
   .col-md-6
     p  
-    = f.text_area :note, label: 'Learning Outcome (Optional)',rows: '8',class: 'text-input'
+      = f.text_area :note, label: 'Learning Outcome (Optional)',rows: '8',class: 'text-input wysihtml5', rows: 10
   .col-md-6
     p
-      b Select Group/Student
-    = select_tag "groups", nil, id: 'power-search-2', class: "select-example-2", multiple: true
+      b What's the student's class type?
+    = select_tag "class_type", options_for_select(["fixed group","random group"]), prompt: "Select Random Group/Fixed Group"
     br
-    br
+    #power-search-fixed-group-div
+      p
+        b Select Fixed Group
+      = select_tag "groups", nil, id: 'power-search-fixed-group', class: "select-example-2", multiple: true
+      br
+      br  
+    #power-search-random-group-div
+      p
+        b Select Temporary Group
+      = select_tag "groups", nil, id: 'power-search-random-group', class: "select-example-3", multiple: true
+      br
+      br
   .col-md-6
+    br
     p   
       b Select Tutor
     = f.select :tutor_id, User.tutor.map {|i| [i.name,i.id]}, { hide_label: true,prompt: 'Select Tutor'}, { id: 'individual_select'}   
-  .col-md-12
+  .col-md-6
     p
       b Is the session completed?
     = f.select :period_status, [{"Incomplete":1}, {"Done": 0}].map {|i| [i.keys[0], i.values[0]]}, { hide_label: true, prompt: 'Status'},{class: 'test',data: { index: "3"}}
@@ -37,14 +50,27 @@ h2 Create a session
 javascript:
 
   $(document).ready(function(){
-      $('#class_type_select').on('change', function() {
-        if (this.value == "Individual")
+    $('.wysihtml5').each(function(i, elem) {
+      $(elem).wysihtml5({
+        toolbar: {
+          "link": true
+        }
+      });
+    });
+    $('[data-wysihtml5-dialog]').on('hidden.bs.modal', function(){
+      $('.modal-backdrop').remove();
+    })
+  })
+
+  $(document).ready(function(){
+      $('#class_type').on('change', function() {
+        if (this.value == "fixed group")
         {
-          $("#group_select").hide();
-          $("#individual_select").toggle();
+          $("#power-search-random-group-div").hide();
+          $("#power-search-fixed-group-div").toggle();
         } else {
-          $("#individual_select").hide();
-          $("#group_select").toggle();
+          $("#power-search-fixed-group-div").hide();
+          $("#power-search-random-group-div").toggle();
         }
       });
   });
@@ -52,7 +78,7 @@ javascript:
   $(document).ready(function(){
     $(".select-example-2").select2({
       maximumSelectionLength: 1,
-      placeholder: "Select the group",
+      placeholder: "Select Group",
       createTag: function (params) {
         return {
           id: params.term,
@@ -73,6 +99,37 @@ javascript:
         processResults: function (data, params) {
           return { results: $.map( data, function(client, i) {
               var displayResult = client.name 
+                  return { id: client.id, text: displayResult}
+              } ) };          
+        }
+      },
+    });
+  });
+  
+  $(document).ready(function(){
+    $(".select-example-3").select2({
+      maximumSelectionLength: 10,
+      placeholder: "Select Student",
+      createTag: function (params) {
+        return {
+          id: params.term,
+          text: params.term,
+          newOption: false
+        }
+      },
+      ajax: {
+        url: "/admin/users/select2_list_student",
+        dataType: 'json',
+        delay: 250,
+        data: function (params) {
+          return {
+            q: params.term, // search term
+            page: params.page
+          };
+        },
+        processResults: function (data, params) {
+          return { results: $.map( data, function(client, i) {
+              var displayResult = client.first_name + ' ' + client.last_name 
                   return { id: client.id, text: displayResult}
               } ) };          
         }

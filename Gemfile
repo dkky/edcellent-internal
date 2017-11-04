@@ -45,7 +45,10 @@ gem 'fullcalendar-rails'
 gem 'momentjs-rails'
 gem 'figaro'
 gem 'google-api-client', require: 'google/apis/calendar_v3'
-
+gem 'acts-as-taggable-on', github: 'mbleigh/acts-as-taggable-on'
+gem 'bootstrap-wysihtml5-rails'
+gem 'bootstrap-datepicker-rails', :require => 'bootstrap-datepicker-rails',
+                              :git => 'git://github.com/Nerian/bootstrap-datepicker-rails.git'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
