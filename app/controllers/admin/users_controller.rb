@@ -62,6 +62,11 @@ class Admin::UsersController < ApplicationController
     render layout: 'admin'
   end
 
+  def update
+    byebug
+    @user = User.update_attributes()
+  end
+
   def select2_list_student
     @users = User.student
     render json: @users

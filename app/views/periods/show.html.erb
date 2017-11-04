@@ -1,24 +1,45 @@
+<div class="row">
+  <div class="col-md-offset-3">     
+    <p>
+      <strong>Name:</strong>
+      <%= @period.description %>
+    </p>
 
-<p>
-  <strong>Name:</strong>
-  <%= @period.description %>
-</p>
+    <p>
+      <strong>Description:</strong>
+      <%= @period.note %>
+    </p>
 
-<p>
-  <strong>Description:</strong>
-  <%= @period.note %>
-</p>
+    <p>
+      <strong>Date:</strong>
+      <%= @period.start_time.strftime("%a, %B %d %Y") %>
+    </p>
 
-<p>
-  <strong>Start:</strong>
-  <%= @period.start_time %>
-</p>
-
-<p>
-  <strong>End:</strong>
-  <%= @period.end_time %>
-</p>
+    <p>
+      <strong>Start Time:</strong>
+      <%= @period.start_time.strftime("%I:%M %p") %>
+    </p>   
 
 
-<%= link_to 'Edit', edit_period_path(@period) %> |
-<%= link_to 'Back', root_path %>
+    <p>
+      <strong>End Time:</strong>
+      <%= @period.end_time.strftime("%I:%M %p") %>
+    </p>    
+
+    <p>
+      <strong>Tutor:</strong>
+      <%= @period.tutor.name %>
+    </p>    
+
+    <p>
+      <strong>Students:</strong>
+      <% @period.group.users.each do |user| %>
+      <%= user.name %>
+      <% end %>
+    </p>
+
+    <%= link_to 'Edit', edit_period_path(@period) %> |
+    <%= link_to 'Back', root_path %>
+  </div>
+</div>
+
