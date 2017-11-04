@@ -39,9 +39,7 @@ h1 Editing Lesson
   = f.select :period_status, [{"Incomplete":1}, {"Done": 0}].map {|i| [i.keys[0], i.values[0]]}, { hide_label: true, prompt: 'Status'},{class: 'test',data: { index: "3"}}
   = f.submit 'Done'
 
-= link_to 'Show', @period 
-br 
-= link_to 'Back', period_path 
+
 
 javascript:
 
