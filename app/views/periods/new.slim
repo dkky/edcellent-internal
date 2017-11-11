@@ -18,19 +18,9 @@ h2 Create a session
     p  
       = f.text_area :note, label: 'Learning Outcome (Optional)',rows: '8',class: 'text-input wysihtml5', rows: 10
   .col-md-6
-    p
-      b What's the student's class type?
-    = select_tag "class_type", options_for_select(["fixed group","random group"]), prompt: "Select Random Group/Fixed Group"
-    br
-    #power-search-fixed-group-div
-      p
-        b Select Fixed Group
-      = select_tag "groups", nil, id: 'power-search-fixed-group', class: "select-example-2", multiple: true
-      br
-      br  
     #power-search-random-group-div
       p
-        b Select Temporary Group
+        b Select Students
       = select_tag "groups", nil, id: 'power-search-random-group', class: "select-example-3", multiple: true
       br
       br
@@ -118,21 +108,49 @@ javascript:
         }
       },
       ajax: {
-        url: "/admin/users/select2_list_student",
+        url: "/admin/users/select2_list_student.json",
         dataType: 'json',
         delay: 250,
-        data: function (params) {
+        data: function (term) {
           return {
-            q: params.term, // search term
-            page: params.page
+              term: term
           };
         },
-        processResults: function (data, params) {
-          return { results: $.map( data, function(client, i) {
-              var displayResult = client.first_name + ' ' + client.last_name 
-                  return { id: client.id, text: displayResult}
-              } ) };          
+        processResults: function (data) {
+          var results = [];
+          $.each(data, function(index, item){
+            var name = item.first_name + ' ' + item.last_name
+            results.push({
+              id: item.id,
+              text: name
+            });
+          });
+          return {
+              results: results
+          };
         }
+        // processResults: function (data, params) {
+        //   // return { results: $.map( data, function(client, i) {
+        //   //     var displayResult = client.first_name + ' ' + client.last_name 
+        //   //         return { id: client.id, text: displayResult}
+        //   //     } ) }; 
+        //   console.log(data.matches)
+        //   return { 
+        //     // Select2 requires an id, so we need to map the results and add an ID
+        //     // You could instead include an id in the tsv you add to soulheart ;)
+        //     results: data.matches.map(function(item) {
+        //       //var textToDisplay = item.category + ": " + item.text
+        //       return {
+        //         id: item.id,
+        //         text: item.first_name
+        //       };
+        //     }),
+        //     pagination: {
+        //       // If there are 10 matches, there's at least another page
+        //       more: data.matches.length === 10
+        //     }
+        //   };         
+        // }
       },
     });
   });

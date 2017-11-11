@@ -18,17 +18,11 @@ h1 Editing Lesson
   br
   p
     b Change? if no changes, please leave this alone.
-  = select_tag "class_type", options_for_select(["fixed group","random group"]), prompt: "Change students"
+  = select_tag "class_type", options_for_select(["yes","no"]), prompt: "Change students"
   br
-  #power-search-fixed-group-div
+  #power-search-student-div
     p
-      b Select Fixed Group
-    = select_tag "groups", nil, id: 'power-search-fixed-group', class: "select-example-2", multiple: true
-    br
-    br  
-  #power-search-random-group-div
-    p
-      b Select Temporary Group
+      b Selec Students
     = select_tag "groups", nil, id: 'power-search-random-group', class: "select-example-3", multiple: true
     br
   p   
@@ -45,13 +39,11 @@ javascript:
 
   $(document).ready(function(){
     $('#class_type').on('change', function() {
-      if (this.value == "fixed group")
+      if (this.value == "yes")
       {
-        $("#power-search-random-group-div").hide();
-        $("#power-search-fixed-group-div").toggle();
+        $("#power-search-student-div").toggle();
       } else {
-        $("#power-search-fixed-group-div").hide();
-        $("#power-search-random-group-div").toggle();
+        $("#power-search-student-div").hide();
       }
     });
   });

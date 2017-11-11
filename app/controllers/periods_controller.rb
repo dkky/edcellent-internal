@@ -72,16 +72,17 @@ class PeriodsController < ApplicationController
   end
 
   def create
-    byebug
     @period = Period.new(periods_params)
-    if params[:groups].length > 1
-      random_group = Group.new(group_status: 1)
-      random_group.name = User.find(*params[:groups].map(&:to_i)).pluck(:first_name, :last_name).map {|arr| arr.join(" ") }.join(", ") + " (Temporary) & random number"
-      random_group.save
-      @period.group_id = random_group.id
+    if existing_group = Group.joins(:users).where('users.id' => sanitize_group_params).select {|g| g.user_ids == sanitize_group_params}.first
+      @period.group_id = existing_group.id
     else
-      @period.group_id = params[:groups][0].to_i
+      new_group = Group.new
+      new_group.user_ids = sanitize_group_params
+      new_group.name = User.find(*sanitize_group_params).pluck(:first_name, :last_name).map {|arr| arr.join(" ") }.join(", ")
+      new_group.save
+      @period.group_id = new_group.id
     end
+
     @period.grouping_list = "1 to " + @period.group.users.count.to_s
     @period.title = @period.subject + ': ' + @period.group.users.pluck(:first_name, :last_name).map {|arr| arr.join(" ") }.join(", ") + ' - ' + @period.tutor.first_name
     if @period.save
@@ -144,6 +145,10 @@ class PeriodsController < ApplicationController
 
   private
 
+  def sanitize_group_params
+    params[:groups].map(&:to_i)  
+  end
+
   def sanitize_page_params
     if !params[:period][:period_status].blank?
       params[:period][:period_status] = params[:period][:period_status].to_i
@@ -196,7 +201,6 @@ class PeriodsController < ApplicationController
       zone = ActiveSupport::TimeZone.new("Melbourne")
       period = Period.find_by(google_event_id: event_id)
       # update info
-      byebug
       result.summary = period.title
       result.description = period.description
       result.start.date_time = period.start_time.in_time_zone(zone).rfc3339
@@ -226,3 +230,7 @@ class PeriodsController < ApplicationController
     }
   end
 end
+
+# select * from groups join users ON groups.user_ids = users.id;
+
+

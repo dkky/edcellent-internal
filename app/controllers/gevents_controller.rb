@@ -53,7 +53,6 @@ class GeventsController < ApplicationController
       service.authorization = client
       zone = ActiveSupport::TimeZone.new("Melbourne")
       period = Period.find(params[:details])
-      byebug
       event = Google::Apis::CalendarV3::Event.new({
         summary: period.title,
         location: '180 Bourke Street',

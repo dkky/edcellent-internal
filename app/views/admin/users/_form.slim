@@ -26,10 +26,10 @@
     p
       b Has the group been created?
       = select_tag "group_status", options_for_select(["no","yes"])
-  /   p
-  /     b What's the group type?
-  /     = select_tag "grouping_list", options_for_select(["1 to 1","1 to 2", "1 to 3","1 to 4"])
-  / #existing_group_div
+    p
+      b What's the group type?
+      = select_tag "grouping_list", options_for_select(["1 to 1","1 to 2", "1 to 3","1 to 4"])
+  #existing_group_div
     p
       = select_tag "groups", nil, id: 'power-search', class: "select-example", multiple: true
   p

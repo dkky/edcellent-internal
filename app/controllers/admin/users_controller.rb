@@ -7,8 +7,8 @@ class Admin::UsersController < ApplicationController
   end
 
   def create
-    if student_params["user_access"] == "student"
-      @user = User.new(student_params)
+    if user_params["user_access"] == "student"
+      @user = User.new(user_params)
       @user.password = "123456"
       if group_params[:groups].is_i?
         # if it is a number, that means it exists in the database already
@@ -18,9 +18,10 @@ class Admin::UsersController < ApplicationController
         group = Group.create(name: group_params[:groups])
         group_id = group.id
       end
-      @user.group_id = group_id  
+      @user.group_ids = group_id  
       if @user.save
-        redirect_to new_admin_profile_path(user_id: @user.id)
+        @user.create_profile
+        redirect_to edit_admin_profile_path(user_id: @user.id)
       else
         @user = User.new
         render 'new'
@@ -29,7 +30,8 @@ class Admin::UsersController < ApplicationController
       @user = User.new(user_params)
       @user.password = "123456"
       if @user.save
-        redirect_to new_admin_profile_path(user_id: @user.id)
+        @user.create_profile
+        redirect_to edit_admin_profile_path(user_id: @user.id)
       else
         render 'new'
       end
@@ -63,8 +65,13 @@ class Admin::UsersController < ApplicationController
   end
 
   def update
-    byebug
-    @user = User.update_attributes()
+    @user = User.find(params[:id])
+    @user.update_attributes(user_params)
+    if @user.save
+      redirect_to edit_admin_profile_path(@user)
+    else 
+      render 'edit'
+    end
   end
 
   def select2_list_student
@@ -74,12 +81,12 @@ class Admin::UsersController < ApplicationController
 
   private
 
-  def student_params
-    params.require(:user).permit(:first_name,:last_name, :school, :year_level, :user_access, :wechat_account, :phone_number, :email)
-  end
-
   def user_params
-    params.require(:user).permit(:first_name,:last_name,:name, :user_access, :wechat_account, :phone_number, :email, :user_type)
+    if params[:user][:user_access] == "student"
+      params.require(:user).permit(:first_name,:last_name, :school, :year_level, :user_access, :wechat_account, :phone_number, :email)
+    else
+      params.require(:user).permit(:first_name,:last_name,:name, :user_access, :wechat_account, :phone_number, :email, :user_type)
+    end
   end
 
   def group_params
