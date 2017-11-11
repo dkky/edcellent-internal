@@ -1,7 +1,7 @@
 class GeventsController < ApplicationController
   def redirect
     client = Signet::OAuth2::Client.new(client_options)
-    client.update!(
+    status = client.update!(
       additional_parameters: {
         access_type: 'offline',
         prompt: 'consent'
@@ -18,6 +18,7 @@ class GeventsController < ApplicationController
       client.code = params[:code]
       response = client.fetch_access_token!
       session[:authorization] = response
+      current_user.update(google_event: 1)
       redirect_to root_path
     end
   end
