@@ -78,15 +78,19 @@ class PeriodsController < ApplicationController
     else
       new_group = Group.new
       new_group.user_ids = sanitize_group_params
-      new_group.name = User.find(*sanitize_group_params).pluck(:first_name, :last_name).map {|arr| arr.join(" ") }.join(", ")
+      user = User.find(*sanitize_group_params)
+      if user.count > 1
+        new_group.name = User.find(*sanitize_group_params).pluck(:first_name, :last_name).map {|arr| arr.join(" ") }.join(", ")
+      else 
+        new_group.name = user.first_name + user.last_name
+      end
       new_group.save
       @period.group_id = new_group.id
     end
-
     @period.grouping_list = "1 to " + @period.group.users.count.to_s
-    @period.title = @period.subject + ': ' + @period.group.users.pluck(:first_name, :last_name).map {|arr| arr.join(" ") }.join(", ") + ' - ' + @period.tutor.first_name
+    @period.title = @period.subject + ': ' + @period.group.name + ' - ' + @period.tutor.first_name
     if @period.save
-      redirect_to new_event_url(calendar_id: "noone.knowu@gmail.com", details: @period.id)
+      redirect_to new_event_url(calendar_id: current_user.email, details: @period.id)
       # pass the period id so that can pass the details to be saved in google calendar
     else
       render 'new'
@@ -231,6 +235,5 @@ class PeriodsController < ApplicationController
   end
 end
 
-# select * from groups join users ON groups.user_ids = users.id;
 
 
