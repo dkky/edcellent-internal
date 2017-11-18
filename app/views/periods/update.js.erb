@@ -1,6 +1,8 @@
 $('#f-calendar').fullCalendar('removeEvents', [<%= @period.id %>]);
-$('#f-calendar').fullCalendar('renderEvent', 
-  $.parseJSON("<%= raw render partial: 'periods/period.json.jbuilder', locals: { period: @period } %>"),
+$('#f-calendar').fullCalendar(
+  'renderEvent', 
+  <%= raw render(partial: 'periods/period.json.jbuilder', locals: { period: @period }) %>, 
+  true
 );
 $('.modal').modal('hide');
  
