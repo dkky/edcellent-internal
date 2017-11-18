@@ -62,7 +62,7 @@ class PeriodsController < ApplicationController
     elsif current_user.tutor?
       @periods = current_user.periods
     elsif current_user.student?
-      @periods = current_user.group.periods
+      @periods = current_user.attending_periods
     end
   end
 
@@ -73,7 +73,7 @@ class PeriodsController < ApplicationController
     elsif current_user.tutor?
       @periods = current_user.periods
     elsif current_user.student?
-      @periods = current_user.group.periods
+      @periods = current_user.attending_periods
     end
   end
 
@@ -96,6 +96,7 @@ class PeriodsController < ApplicationController
     @period.grouping_list = "1 to " + @period.group.users.count.to_s
     @period.title = @period.subject + ': ' + @period.group.name + ' - ' + @period.tutor.first_name
     if @period.save
+      # SUGGEST: should be done in background and if failed, notify dev
       create_event(@period.id)
     else
       render 'new'
@@ -115,7 +116,6 @@ class PeriodsController < ApplicationController
   end
 
   def update
-    byebug
     @period.update_attributes(periods_params)
     if sanitize_group_params.count > 0
       user = User.find(*sanitize_group_params)
@@ -136,6 +136,7 @@ class PeriodsController < ApplicationController
     @period.grouping_list = "1 to " + @period.group.users.count.to_s
     @period.title = @period.subject + ': ' + @period.group.name + ' - ' + @period.tutor.first_name
     if @period.save
+      # SUGGEST: should be done in background and if failed, notify dev
       update_event(@period.google_event_id)
     else
       redirect_to @period
@@ -170,7 +171,7 @@ class PeriodsController < ApplicationController
   private
 
   def sanitize_group_params
-    if !params[:group].blank?
+    if !params[:groups].blank?
       params[:groups].map(&:to_i) 
     else  
       return []
@@ -274,7 +275,6 @@ class PeriodsController < ApplicationController
       result.description = @period.description
       result.start.date_time = @period.start_time.in_time_zone(zone).rfc3339
       result.end.date_time = @period.end_time.in_time_zone(zone).rfc3339
-      # byebug
       service.update_event('primary', event_id, result)
       render "periods/update.js.erb"
 

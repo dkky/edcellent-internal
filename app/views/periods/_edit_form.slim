@@ -1,6 +1,6 @@
 h1 Editing Lesson
 
-= bootstrap_form_for @period do |f|
+= bootstrap_form_for @period, remote: true do |f|
   = f.text_field :start_time, label: 'What time does it start?', class: 'text-input',id: 'date-start',data: { index: "7"}
   p    
   = f.text_field :end_time, label: 'What time does it end?', class: 'text-input',id: 'date-end',data: { index: "7"}
@@ -22,7 +22,7 @@ h1 Editing Lesson
   br
   #power-search-student-div
     p
-      b Selec Students
+      b Select Students
     = select_tag "groups", nil, id: 'power-search-random-group', class: "select-example-3", multiple: true
     br
   p   
