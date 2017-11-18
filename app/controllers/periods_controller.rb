@@ -276,8 +276,7 @@ class PeriodsController < ApplicationController
       result.end.date_time = @period.end_time.in_time_zone(zone).rfc3339
       # byebug
       service.update_event('primary', event_id, result)
-      render "periods/update.js.erb"
-
+      render "update.js.erb"
     rescue Google::Apis::AuthorizationError
       # access token expired after an hour
       response = client.refresh!
