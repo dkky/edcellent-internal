@@ -62,7 +62,7 @@ class PeriodsController < ApplicationController
     elsif current_user.tutor?
       @periods = current_user.periods
     elsif current_user.student?
-      @periods = current_user.group.periods
+      @periods = current_user.attending_periods
     end
   end
 
@@ -73,7 +73,7 @@ class PeriodsController < ApplicationController
     elsif current_user.tutor?
       @periods = current_user.periods
     elsif current_user.student?
-      @periods = current_user.group.periods
+      @periods = current_user.attending_periods
     end
   end
 
@@ -115,7 +115,6 @@ class PeriodsController < ApplicationController
   end
 
   def update
-    byebug
     @period.update_attributes(periods_params)
     if sanitize_group_params.count > 0
       user = User.find(*sanitize_group_params)
@@ -274,7 +273,6 @@ class PeriodsController < ApplicationController
       result.description = @period.description
       result.start.date_time = @period.start_time.in_time_zone(zone).rfc3339
       result.end.date_time = @period.end_time.in_time_zone(zone).rfc3339
-      # byebug
       service.update_event('primary', event_id, result)
       render "periods/update.js.erb"
 

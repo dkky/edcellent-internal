@@ -5,6 +5,7 @@ class User < ApplicationRecord
   has_many :user_groups
   has_many :groups, through: :user_groups
   has_many :periods, foreign_key: :tutor_id
+  has_many :attending_periods, through: :groups, source: :periods
   # belongs_to :group, optional: true
   has_one :profile
   enum user_access: [:admin, :student, :tutor]
