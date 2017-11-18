@@ -1,0 +1,6 @@
+$('#f-calendar').fullCalendar(
+  'renderEvent', 
+  $.parseJSON("<%= j render(@period, format: :json).html_safe %>"),
+  true
+);
+$('#new_event').modal('hide');

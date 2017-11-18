@@ -1,4 +1,3 @@
-<p><%= link_to 'Create a New Session', new_period_path %></p>
 <% unless current_user.google_event %>
   <p><%= link_to 'Authorize Your Calendar', redirect_path %></p>
 <% end %>

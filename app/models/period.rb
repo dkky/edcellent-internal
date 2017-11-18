@@ -3,6 +3,8 @@ class Period < ApplicationRecord
   belongs_to :group
   acts_as_taggable # Alias for acts_as_taggable_on :tags
   acts_as_taggable_on :groupings
+  attr_accessor :date_range
+
 
   enum period_status: [:done, :incomplete]
 

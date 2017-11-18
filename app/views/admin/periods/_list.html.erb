@@ -14,6 +14,8 @@
 <table class="table table-hover">
   <thead>
     <tr>
+      <th>No.</th>
+      <th>DateTime</th>
       <th>Name</th>
       <th>Description</th>
       <th></th>
@@ -21,8 +23,10 @@
   </thead>
   <tbody>
   <div id="all_sessions">
-    <% @periods.each do |period| %>
+    <% @periods.order("end_time DESC").each_with_index do |period, i| %>
       <tr id="session_<%= period.id %>">
+        <td><%= i + 1 %></td>
+        <td><%= period.start_time.to_formatted_s(:long) %></td>
         <td><%= period.title %></td>
         <td><%= period.description %></td>
         <% if period.incomplete? %>

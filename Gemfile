@@ -24,6 +24,8 @@ gem 'coffee-rails', '~> 4.2'
 gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.5'
+# gem 'jbuilder', github: 'rails/jbuilder'
+
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
@@ -49,6 +51,8 @@ gem 'acts-as-taggable-on', github: 'mbleigh/acts-as-taggable-on'
 gem 'bootstrap-wysihtml5-rails'
 gem 'bootstrap-datepicker-rails', :require => 'bootstrap-datepicker-rails',
                               :git => 'git://github.com/Nerian/bootstrap-datepicker-rails.git'
+gem 'simple_form'
+
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development

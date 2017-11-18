@@ -1,5 +1,5 @@
 class PeriodsController < ApplicationController
-  before_action :set_period, only: [:show, :edit, :update, :destroy]
+  before_action :set_period, only: [:show, :edit, :update, :destroy, :drop]
   before_action :check_access, only: [:index, :show, :edit, :update, :destroy, :calendar, :search]
   before_action :sanitize_page_params, only: [:create, :update]
   before_action :sanitize_time_params, only: [:update]
@@ -8,6 +8,11 @@ class PeriodsController < ApplicationController
 
   def new
     @period = Period.new
+  end
+
+  def newmodal
+    @period = Period.new
+    render 'newmodal.js.erb'
   end
 
   def search
@@ -62,6 +67,7 @@ class PeriodsController < ApplicationController
   end
 
   def calendar
+    @period = Period.new
     if current_user.admin?
       @periods = Period.all
     elsif current_user.tutor?
@@ -79,7 +85,7 @@ class PeriodsController < ApplicationController
       new_group = Group.new
       new_group.user_ids = sanitize_group_params
       user = User.find(*sanitize_group_params)
-      if user.count > 1
+      if user.class == Array
         new_group.name = User.find(*sanitize_group_params).pluck(:first_name, :last_name).map {|arr| arr.join(" ") }.join(", ")
       else 
         new_group.name = user.first_name + user.last_name
@@ -90,8 +96,7 @@ class PeriodsController < ApplicationController
     @period.grouping_list = "1 to " + @period.group.users.count.to_s
     @period.title = @period.subject + ': ' + @period.group.name + ' - ' + @period.tutor.first_name
     if @period.save
-      redirect_to new_event_url(calendar_id: current_user.email, details: @period.id)
-      # pass the period id so that can pass the details to be saved in google calendar
+      create_event(@period.id)
     else
       render 'new'
     end
@@ -101,20 +106,35 @@ class PeriodsController < ApplicationController
   end
 
   def edit
+    render 'edit.js.erb'
+  end
+
+  def drop
+    @period.update_attributes(periods_params)
+    update_event(@period.google_event_id)
   end
 
   def update
+    byebug
     @period.update_attributes(periods_params)
-    if !params[:group].blank?
-      if params[:groups].length > 1
-        random_group = Group.new(group_status: 1)
-        random_group.name = User.find(*params[:groups].map(&:to_i)).pluck(:first_name, :last_name).map {|arr| arr.join(" ") }.join(", ") + " (Temporary) & random number"
-        random_group.save
-        @period.group_id = random_group.id
-      else
-        @period.group_id = params[:groups][0].to_i
+    if sanitize_group_params.count > 0
+      user = User.find(*sanitize_group_params)
+      if existing_group = Group.joins(:users).where('users.id' => sanitize_group_params).select {|g| g.user_ids == sanitize_group_params}.first
+        @period.group_id = existing_group.id
+      else 
+        new_group = Group.new
+        new_group.user_ids = sanitize_group_params
+        if sanitize_group_params.count > 1
+          new_group.name = user.pluck(:first_name, :last_name).map {|arr| arr.join(" ") }.join(", ")
+        else 
+          new_group.name = user.first_name + user.last_name
+        end
+        new_group.save
       end
+      @period.group_id = new_group.id
     end
+    @period.grouping_list = "1 to " + @period.group.users.count.to_s
+    @period.title = @period.subject + ': ' + @period.group.name + ' - ' + @period.tutor.first_name
     if @period.save
       update_event(@period.google_event_id)
     else
@@ -150,7 +170,11 @@ class PeriodsController < ApplicationController
   private
 
   def sanitize_group_params
-    params[:groups].map(&:to_i)  
+    if !params[:group].blank?
+      params[:groups].map(&:to_i) 
+    else  
+      return []
+    end
   end
 
   def sanitize_page_params
@@ -174,6 +198,47 @@ class PeriodsController < ApplicationController
 
   def set_period
     @period = Period.find(params[:id])
+  end
+
+  def create_event(event_id)
+    begin
+      client = Signet::OAuth2::Client.new(client_options)
+      client.update!(session[:authorization])
+      service = Google::Apis::CalendarV3::CalendarService.new
+      service.authorization = client
+      zone = ActiveSupport::TimeZone.new("Melbourne")
+      @period = Period.find(event_id)
+      event = Google::Apis::CalendarV3::Event.new({
+        summary: @period.title,
+        location: '180 Bourke Street',
+        description: @period.description,
+        start: {
+          # date_time: '2017-09-30T12:30:00+10:00'
+          date_time: @period.start_time.in_time_zone(zone).rfc3339
+          # date_time: '2017-09-28T19:00:00',
+          # time_zone: 'Australia/Melbourne',
+        },
+        end: {
+          date_time: @period.end_time.in_time_zone(zone).rfc3339
+          # date_time: '2015-09-28T21:00:00',
+          # time_zone: 'Australia/Melbourne',
+        },
+        attendees: [
+          {email: 'lpage@example.com'},
+          {email: 'sbrin@example.com'},
+        ],
+      })
+      result = service.insert_event(current_user.email, event)
+      # email to be changed later...
+      @period.google_event_id = result.id
+      @period.save
+      render "periods/create.js.erb"
+    rescue Google::Apis::AuthorizationError
+      # access token expired after an hour
+      response = client.refresh!
+      session[:authorization] = session[:authorization].merge(response)
+      retry
+    end
   end
 
   def delete_event(event_id)
@@ -203,18 +268,16 @@ class PeriodsController < ApplicationController
       service.authorization = client
       result = service.get_event('primary', event_id)
       zone = ActiveSupport::TimeZone.new("Melbourne")
-      period = Period.find_by(google_event_id: event_id)
+      @period = Period.find_by(google_event_id: event_id)
       # update info
-      result.summary = period.title
-      result.description = period.description
-      result.start.date_time = period.start_time.in_time_zone(zone).rfc3339
-      result.end.date_time = period.end_time.in_time_zone(zone).rfc3339
+      result.summary = @period.title
+      result.description = @period.description
+      result.start.date_time = @period.start_time.in_time_zone(zone).rfc3339
+      result.end.date_time = @period.end_time.in_time_zone(zone).rfc3339
       # byebug
       service.update_event('primary', event_id, result)
-      respond_to do |f|
-        f.html { redirect_to period }
-        f.js { render 'calendar.html.erb' }
-      end   
+      render "periods/update.js.erb"
+
     rescue Google::Apis::AuthorizationError
       # access token expired after an hour
       response = client.refresh!

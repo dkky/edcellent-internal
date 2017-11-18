@@ -53,19 +53,6 @@ javascript:
   })
 
   $(document).ready(function(){
-      $('#class_type').on('change', function() {
-        if (this.value == "fixed group")
-        {
-          $("#power-search-random-group-div").hide();
-          $("#power-search-fixed-group-div").toggle();
-        } else {
-          $("#power-search-fixed-group-div").hide();
-          $("#power-search-random-group-div").toggle();
-        }
-      });
-  });
-
-  $(document).ready(function(){
     $(".select-example-2").select2({
       maximumSelectionLength: 1,
       placeholder: "Select Group",

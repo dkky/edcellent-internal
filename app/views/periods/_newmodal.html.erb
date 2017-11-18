@@ -1,0 +1,94 @@
+<div class="modal fade" id="new_event">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Create New Event</h4>
+      </div>
+      <div class="modal-body">
+        <%= render 'form', period: @period %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $('#new_event').on('shown.bs.modal', function (e) { 
+     $('.wysihtml5').each(function(i, elem) {
+       $(elem).wysihtml5({
+         toolbar: {
+           "link": true
+         }
+       });
+     });
+     $('[data-wysihtml5-dialog]').on('hidden.bs.modal', function(){
+       $('.modal-backdrop').remove();
+     })
+   })
+
+  $(".select-example-3").select2({
+    maximumSelectionLength: 10,
+    placeholder: "Select Student",
+    createTag: function (params) {
+      return {
+        id: params.term,
+        text: params.term,
+        newOption: false
+      }
+    },
+    ajax: {
+      url: "/admin/users/select2_list_student.json",
+      dataType: 'json',
+      delay: 250,
+      data: function (term) {
+        return {
+            term: term
+        };
+      },
+      processResults: function (data) {
+        var results = [];
+        $.each(data, function(index, item){
+          var name = item.first_name + ' ' + item.last_name
+          results.push({
+            id: item.id,
+            text: name
+          });
+        });
+        return {
+            results: results
+        };
+      }
+    },
+  });
+// *** Date Picker not fixed yet~~~~~
+  $('#new_event').on('shown.bs.modal', function (e) { 
+    $('.modal_start_time').daterangepicker(
+      {
+          singleDatePicker: true,
+          timePicker: true,
+          locale: {
+            format: 'YYYY-MM-DD HH:mm A'
+          },
+      });    
+    $('.modal_end_time').daterangepicker(
+      {
+          singleDatePicker: true,
+          timePicker: true,
+          locale: {
+            format: 'YYYY-MM-DD HH:mm A'
+          },
+      });
+    // $('.date-range-picker').each(function(){
+    //   $(this).daterangepicker({
+    //       timePicker: true,
+    //       timePickerIncrement: 30,
+    //       alwaysShowCalendars: true
+    //   }, function(start, end, label) {
+    //     $('.modal_start_time').val(start.format('YYYY-MM-DD HH:mm'));
+    //     $('.model_end_time').val(end.format('YYYY-MM-DD HH:mm'));
+    //   });
+    // })
+  })
+
+
+</script>

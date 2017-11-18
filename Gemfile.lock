@@ -214,6 +214,9 @@ GEM
       faraday (~> 0.9)
       jwt (~> 1.5)
       multi_json (~> 1.10)
+    simple_form (3.5.0)
+      actionpack (> 4, < 5.2)
+      activemodel (> 4, < 5.2)
     slim (3.0.8)
       temple (>= 0.7.6, < 0.9)
       tilt (>= 1.3.3, < 2.1)
@@ -284,6 +287,7 @@ DEPENDENCIES
   responders
   sass-rails (~> 5.0)
   select2-rails
+  simple_form
   slim-rails
   spring
   spring-watcher-listen (~> 2.0.0)

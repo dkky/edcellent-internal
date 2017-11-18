@@ -1,4 +1,7 @@
 class GeventsController < ApplicationController
+  respond_to :html, :json
+
+
   def redirect
     client = Signet::OAuth2::Client.new(client_options)
     status = client.update!(
@@ -53,19 +56,19 @@ class GeventsController < ApplicationController
       service = Google::Apis::CalendarV3::CalendarService.new
       service.authorization = client
       zone = ActiveSupport::TimeZone.new("Melbourne")
-      period = Period.find(params[:details])
+      @period = Period.find(params[:details])
       event = Google::Apis::CalendarV3::Event.new({
-        summary: period.title,
+        summary: @period.title,
         location: '180 Bourke Street',
-        description: period.description,
+        description: @period.description,
         start: {
           # date_time: '2017-09-30T12:30:00+10:00'
-          date_time: period.start_time.in_time_zone(zone).rfc3339
+          date_time: @period.start_time.in_time_zone(zone).rfc3339
           # date_time: '2017-09-28T19:00:00',
           # time_zone: 'Australia/Melbourne',
         },
         end: {
-          date_time: period.end_time.in_time_zone(zone).rfc3339
+          date_time: @period.end_time.in_time_zone(zone).rfc3339
           # date_time: '2015-09-28T21:00:00',
           # time_zone: 'Australia/Melbourne',
         },
@@ -75,9 +78,16 @@ class GeventsController < ApplicationController
         ],
       })
       result = service.insert_event(params[:calendar_id], event)
-      period.google_event_id = result.id
-      period.save
-      redirect_to period     
+      @period.google_event_id = result.id
+      @period.save
+      # render 'periods/period.json.jbuilder'
+      # respond_to do |format|
+      #   format.html
+      #   format.json { render json: @period }
+      # end
+      render "periods/create.js.erb"
+
+      # redirect_to period     
     rescue Google::Apis::AuthorizationError
       # access token expired after an hour
       response = client.refresh!

@@ -18,12 +18,15 @@ Rails.application.routes.draw do
       get :search
     end
   end
+
   get "/session/duplicate" => "periods#duplicate", as: "duplicate_session"
   get "/period/change_status/:id" => "periods#change_status", as: "change_period_status"
   get "/admin/period/change_status/:id" => "admin/periods#change_status", as: "admin_change_period_status"
   get "/periods/calendar" => "periods#calendar", as: "sessions_calendar"
   get '/admin/users/select2_list_student' => 'admin/users#select2_list_student'
-
+  get "/periods/calendar/drop/:id" => "periods#drop"
+  match "/newmodal" => "periods#newmodal", :via => :get
+  
   namespace :admin do
     resources :users
     resources :groups

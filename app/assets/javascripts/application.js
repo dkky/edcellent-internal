@@ -18,48 +18,60 @@
 //= require turbolinks
 //= require bootstrap-sprockets
 //= require filterrific/filterrific-jquery
+//= require daterangepicker
 //= require bootstrap-material-datetimepicker
 //= require bootstrap-wysihtml5
 //= require bootstrap-datepicker
 //= require select2
 
-function eventCalendar() {
-  return $('#f-calendar').fullCalendar({
-    buttonText: {
-      listWeek: 'list - week',
-      listDay: 'list - day',
-    },
-    header: {
-        center: 'agendaWeek,month,listWeek,listDay, listView' // buttons for switching between views
-    },
-    views: {
-        agenda7Day: {
-            type: 'agenda',
-            duration: { days: 7 },
-            buttonText: '7 days'
-        }
-    },
-    eventColor: '#669999',
-    events: '/periods.json',
-    editable: true, 
-    droppable: true,
-    defaultView: 'month',
-    eventRender: function(event, element) { 
-      element.find(".fc-time").remove();
-      element.find('.fc-title').append("<br/>" + moment(event.start).format("HH:mm")  + '-' + moment(event.end).format("HH:mm") + "<br/>"); 
-      element.find('.fc-list-item-title').append(event.tutor + "<br/>" + event.student); 
-      element.find('.fc-content').append('TUTOR: ' + event.tutor + "<br/>" + event.student); 
-    },
-    eventDrop: function(event, delta, revertFunc) {
+var initialize_calendar;
+initialize_calendar = function() {
+  $('#f-calendar').each(function(){
+    var calendar = $(this);
+    calendar.fullCalendar({
+      buttonText: {
+        listWeek: 'list - week',
+        listDay: 'list - day',
+      },
+      header: {
+          center: 'agendaWeek,month,listWeek,listDay, listView' // buttons for switching between views
+      },
+      views: {
+          agenda7Day: {
+              type: 'agenda',
+              duration: { days: 7 },
+              buttonText: '7 days'
+          }
+      },
+      events: '/periods.json',
+      editable: true, 
+      droppable: true,
+      selectable: true,
+      selectHelper: true,
+      defaultView: 'agendaWeek',
+      select: function(start, end) {
+        $.getScript('/newmodal', function() {
+          $('.modal_start_time').val(moment(start).format('YYYY-MM-DD HH:mm'));
+          $('.modal_end_time').val(moment(end).format('YYYY-MM-DD HH:mm'));
+        });
+        calendar.fullCalendar('unselect');
+      },
+      eventRender: function(event, element) { 
+        element.find(".fc-time").remove();
+        element.find('.fc-title').append("<br/>" + moment(event.start).format("HH:mm")  + '-' + moment(event.end).format("HH:mm") + "<br/>"); 
+        element.find('.fc-list-item-title').append(event.tutor + "<br/>" + event.student); 
+        element.find('.fc-content').append('TUTOR: ' + event.tutor + "<br/>" +  event.student); 
+      },
+      eventDrop: function(event, delta, revertFunc) {
 
-        alert("You're changing your lesson: " + event.description + " to " + event.start.format());
+        alert("You're changing your lesson: " + event.description + " to " + event.start.format('YYYY-MM-DD HH:mm'));
 
         if (!confirm("Are you sure about this change?")) {
             revertFunc();
         }
         $.ajax({
-          type: 'PUT',
-          url: '/periods/' + event.id,
+          type: 'GET',
+          url: '/periods/calendar/drop/' + event.id,
           dataType: 'json',
           data: { 
             period: { 
@@ -68,16 +80,26 @@ function eventCalendar() {
             } 
           }
         });
-    }
-  });
+      },
+      eventClick: function(event, jsEvent, view) {
+        $.getScript(event.edit_url, function() {
+          // $('#event_date_range').val(moment(event.start).format("MM/DD/YYYY HH:mm") + ' - ' + moment(event.end).format("MM/DD/YYYY HH:mm"))
+          // date_range_picker();
+          // $('.start_hidden').val(moment(event.start).format('YYYY-MM-DD HH:mm'));
+          // $('.end_hidden').val(moment(event.end).format('YYYY-MM-DD HH:mm'));
+        });
+      }
+    });
+  })
 };
+
 
 function clearCalendar() {
   $('#f-calendar').fullCalendar('delete'); // In case delete doesn't work.
   $('#f-calendar').html('');
 };
 
-$(document).on('turbolinks:load', eventCalendar);
+$(document).on('turbolinks:load', initialize_calendar);
 $(document).on('turbolinks:before-cache', clearCalendar);
 
 
