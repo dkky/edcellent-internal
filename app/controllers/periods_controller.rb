@@ -96,6 +96,7 @@ class PeriodsController < ApplicationController
     @period.grouping_list = "1 to " + @period.group.users.count.to_s
     @period.title = @period.subject + ': ' + @period.group.name + ' - ' + @period.tutor.first_name
     if @period.save
+      # SUGGEST: should be done in background and if failed, notify dev
       create_event(@period.id)
     else
       render 'new'
@@ -135,6 +136,7 @@ class PeriodsController < ApplicationController
     @period.grouping_list = "1 to " + @period.group.users.count.to_s
     @period.title = @period.subject + ': ' + @period.group.name + ' - ' + @period.tutor.first_name
     if @period.save
+      # SUGGEST: should be done in background and if failed, notify dev
       update_event(@period.google_event_id)
     else
       redirect_to @period
@@ -169,7 +171,7 @@ class PeriodsController < ApplicationController
   private
 
   def sanitize_group_params
-    if !params[:group].blank?
+    if !params[:groups].blank?
       params[:groups].map(&:to_i) 
     else  
       return []
