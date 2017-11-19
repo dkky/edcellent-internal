@@ -16,4 +16,5 @@ json.array!(@periods) do |period|
   # json.url period_url(period, format: :html)
   json.update_url period_path(period, method: :patch)
   json.edit_url edit_period_path(period)
+  json.destroy_url period_path(period, attribute: 'delete_period_calendar')
 end

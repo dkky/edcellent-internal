@@ -31,7 +31,19 @@ h1 Editing Lesson
   p
     b Is the session completed?
   = f.select :period_status, [{"Incomplete":1}, {"Done": 0}].map {|i| [i.keys[0], i.values[0]]}, { hide_label: true, prompt: 'Status'},{class: 'test',data: { index: "3"}}
-  = f.submit 'Done'
+  .btn-toolbar
+    = f.submit 'Update'
+    = link_to 'Delete', 
+      period_path(:id => period.id, :attribute => 'delete_period_modal'),
+      method: :delete, 
+      class: 'btn btn-danger', 
+      data: { confirm: 'Are you sure?'}, 
+      remote: true 
+    = link_to 'Duplicate',
+      duplicate_session_path(period),
+      class: 'btn btn-default',
+      remote: true 
+
 
 
 

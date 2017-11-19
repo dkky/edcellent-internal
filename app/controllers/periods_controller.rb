@@ -1,4 +1,7 @@
 class PeriodsController < ApplicationController
+  protect_from_forgery except: :duplicate
+
+
   before_action :set_period, only: [:show, :edit, :update, :destroy, :drop]
   before_action :check_access, only: [:index, :show, :edit, :update, :destroy, :calendar, :search]
   before_action :sanitize_page_params, only: [:create, :update]
@@ -116,6 +119,7 @@ class PeriodsController < ApplicationController
   end
 
   def update
+    byebug
     @period.update_attributes(periods_params)
     if sanitize_group_params.count > 0
       user = User.find(*sanitize_group_params)
@@ -144,15 +148,16 @@ class PeriodsController < ApplicationController
   end
 
   def destroy
+    byebug
     @period = Period.destroy(params[:id])
-    delete_event(@period.google_event_id)
+    delete_event(@period.google_event_id, @period.id, params[:attribute])
   end
 
   def duplicate
     @source = Period.find(params[:format])
     @period = @source.dup
     flash.now[:notice] = "This is a duplicate. Please update the info and save"
-    render 'new'
+    render 'newmodal.js.erb'
   end
 
   def change_status
@@ -209,10 +214,16 @@ class PeriodsController < ApplicationController
       service.authorization = client
       zone = ActiveSupport::TimeZone.new("Melbourne")
       @period = Period.find(event_id)
+      if @period.incomplete?
+        color = 11
+      else
+        color = 1
+      end
       event = Google::Apis::CalendarV3::Event.new({
         summary: @period.title,
         location: '180 Bourke Street',
         description: @period.description,
+        color_id: color,
         start: {
           # date_time: '2017-09-30T12:30:00+10:00'
           date_time: @period.start_time.in_time_zone(zone).rfc3339
@@ -242,17 +253,26 @@ class PeriodsController < ApplicationController
     end
   end
 
-  def delete_event(event_id)
+  def delete_event(event_id, period_id, source_of_action)
+    byebug
     begin
+      @period_id = period_id
       client = Signet::OAuth2::Client.new(client_options)
       client.update!(session[:authorization])
       service = Google::Apis::CalendarV3::CalendarService.new
       service.authorization = client
       service.delete_event('primary', event_id)
-      respond_to do |f|
-        f.html { redirect_to root_path }
-        f.js 
-      end   
+      if source_of_action == "delete_period_modal" || source_of_action == "delete_period_calendar"
+        respond_to do |f|
+          f.html { redirect_to root_path }
+          f.js { render 'destroy_in_modal.js.erb', locals: { source_of_action: source_of_action } }
+        end           
+      else
+        respond_to do |f|
+          f.html { redirect_to root_path }
+          f.js { render 'destroy.js.erb' }
+        end   
+      end
     rescue Google::Apis::AuthorizationError
       # access token expired after an hour
       response = client.refresh!
@@ -262,6 +282,7 @@ class PeriodsController < ApplicationController
   end
 
   def update_event(event_id)
+    byebug
     begin
       client = Signet::OAuth2::Client.new(client_options)
       client.update!(session[:authorization])
@@ -271,8 +292,14 @@ class PeriodsController < ApplicationController
       zone = ActiveSupport::TimeZone.new("Melbourne")
       @period = Period.find_by(google_event_id: event_id)
       # update info
+      if @period.incomplete?
+        color = 11
+      else
+        color = 1
+      end
       result.summary = @period.title
       result.description = @period.description
+      result.color_id = color
       result.start.date_time = @period.start_time.in_time_zone(zone).rfc3339
       result.end.date_time = @period.end_time.in_time_zone(zone).rfc3339
       service.update_event('primary', event_id, result)

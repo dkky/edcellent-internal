@@ -14,3 +14,5 @@ else
 end
 json.update_url period_path(period, method: :patch)
 json.edit_url edit_period_path(period)
+json.destroy_url period_path(period, attribute: 'delete_period_calendar')
+

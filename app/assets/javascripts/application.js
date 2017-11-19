@@ -60,7 +60,7 @@ initialize_calendar = function() {
         element.find(".fc-time").remove();
         element.find('.fc-title').append("<br/>" + moment(event.start).format("HH:mm")  + '-' + moment(event.end).format("HH:mm") + "<br/>"); 
         element.find('.fc-list-item-title').append(event.tutor + "<br/>" + event.student); 
-        element.find('.fc-content').append('TUTOR: ' + event.tutor + "<br/>" +  event.student); 
+        element.find('.fc-content').append('<a href="' + event.destroy_url + '" data-remote=true data-method=delete>' + '  ' + '<i class="fa fa-window-close fa-lg" style="color:black; float:left;"></i>' +  '</a>' + '  TUTOR: ' + event.tutor + "<br/>" +  event.student + "<br/>" ); 
       },
       eventDrop: function(event, delta, revertFunc) {
 
@@ -82,11 +82,16 @@ initialize_calendar = function() {
         });
       },
       eventClick: function(event, jsEvent, view) {
-        $.getScript(event.edit_url, function() {
-          // $('#event_date_range').val(moment(event.start).format("MM/DD/YYYY HH:mm") + ' - ' + moment(event.end).format("MM/DD/YYYY HH:mm"))
-          // date_range_picker();
-          // $('.start_hidden').val(moment(event.start).format('YYYY-MM-DD HH:mm'));
-          // $('.end_hidden').val(moment(event.end).format('YYYY-MM-DD HH:mm'));
+        $('.fc-content').on('click', function(e) {
+          if (e.target != this)
+            return;
+
+          $.getScript(event.edit_url, function() {
+            // $('#event_date_range').val(moment(event.start).format("MM/DD/YYYY HH:mm") + ' - ' + moment(event.end).format("MM/DD/YYYY HH:mm"))
+            // date_range_picker();
+            // $('.start_hidden').val(moment(event.start).format('YYYY-MM-DD HH:mm'));
+            // $('.end_hidden').val(moment(event.end).format('YYYY-MM-DD HH:mm'));
+          });
         });
       }
     });
