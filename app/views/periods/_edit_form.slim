@@ -32,6 +32,17 @@ h1 Editing Lesson
     b Is the session completed?
   = f.select :period_status, [{"Incomplete":1}, {"Done": 0}].map {|i| [i.keys[0], i.values[0]]}, { hide_label: true, prompt: 'Status'},{class: 'test',data: { index: "3"}}
   .btn-toolbar
+    .dropup
+      a.btn.btn-default.dropdown-toggle aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" href="#" role="button" 
+        = "#{period.period_status.capitalize}" 
+        span.caret
+      ul.dropdown-menu
+        li
+          strong Change to
+        li = link_to "#{(Period.period_statuses.keys - [period.period_status])[0].capitalize}", 
+          change_period_status_path(period), 
+          method: :get,
+          remote: true 
     = f.submit 'Update'
     = link_to 'Delete', 
       period_path(:id => period.id, :attribute => 'delete_period_modal'),
@@ -43,6 +54,7 @@ h1 Editing Lesson
       duplicate_session_path(period),
       class: 'btn btn-default',
       remote: true 
+
 
 
 

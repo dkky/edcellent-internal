@@ -57,10 +57,25 @@ initialize_calendar = function() {
         calendar.fullCalendar('unselect');
       },
       eventRender: function(event, element) { 
+        console.log(event)
         element.find(".fc-time").remove();
         element.find('.fc-title').append("<br/>" + moment(event.start).format("HH:mm")  + '-' + moment(event.end).format("HH:mm") + "<br/>"); 
-        element.find('.fc-list-item-title').append(event.tutor + "<br/>" + event.student); 
-        element.find('.fc-content').append('<a href="' + event.destroy_url + '" data-remote=true data-method=delete>' + '  ' + '<i class="fa fa-window-close fa-lg" style="color:black; float:left;"></i>' +  '</a>' + '  TUTOR: ' + event.tutor + "<br/>" +  event.student + "<br/>" ); 
+        element.find('.fc-list-item-title').append(event.tutor + 
+          "<br/>" + 
+          event.student
+        ); 
+        element.find('.fc-content').append(
+          '<a href="' + event.destroy_url + 
+          '" data-remote=true data-method=delete>' + 
+          '  ' + 
+          event.icon +  
+          '</a>' + 
+          '  TUTOR: ' + 
+          event.tutor + 
+          "<br/>" + 
+          event.student +
+          "<br/>" 
+        ); 
       },
       eventDrop: function(event, delta, revertFunc) {
 
