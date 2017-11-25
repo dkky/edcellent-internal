@@ -1,7 +1,5 @@
 class PeriodsController < ApplicationController
   protect_from_forgery except: :duplicate
-
-
   before_action :set_period, only: [:show, :edit, :update, :destroy, :drop]
   before_action :check_access, only: [:index, :show, :edit, :update, :destroy, :calendar, :search]
   before_action :sanitize_page_params, only: [:create, :update]
@@ -81,28 +79,34 @@ class PeriodsController < ApplicationController
   end
 
   def create
+    byebug
     @period = Period.new(periods_params)
-    if existing_group = Group.joins(:users).where('users.id' => sanitize_group_params).select {|g| g.user_ids == sanitize_group_params}.first
-      @period.group_id = existing_group.id
-    else
-      new_group = Group.new
-      new_group.user_ids = sanitize_group_params
-      user = User.find(*sanitize_group_params)
-      if user.class == Array
-        new_group.name = User.find(*sanitize_group_params).pluck(:first_name, :last_name).map {|arr| arr.join(" ") }.join(", ")
-      else 
-        new_group.name = user.first_name + user.last_name
+    if sanitize_group_params.count > 0
+      if existing_group = Group.joins(:users).where('users.id' => sanitize_group_params).select {|g| g.user_ids == sanitize_group_params}.first
+        @period.group_id = existing_group.id
+      else
+        new_group = Group.new
+        new_group.user_ids = sanitize_group_params
+        user = User.find(*sanitize_group_params)
+        if user.class == Array
+          new_group.name = User.find(*sanitize_group_params).pluck(:first_name, :last_name).map {|arr| arr.join(" ") }.join(", ")
+        else 
+          new_group.name = user.first_name + user.last_name
+        end
+        new_group.save
+        @period.group_id = new_group.id
       end
-      new_group.save
-      @period.group_id = new_group.id
-    end
-    @period.grouping_list = "1 to " + @period.group.users.count.to_s
-    @period.title = @period.subject + ': ' + @period.group.name + ' - ' + @period.tutor.first_name
-    if @period.save
+      @period.grouping_list = "1 to " + @period.group.users.count.to_s
+      @period.title = @period.subject + ': ' + @period.group.name + ' - ' + @period.tutor.first_name
+      
       # SUGGEST: should be done in background and if failed, notify dev
-      create_event(@period.id)
+      if @period.save
+        create_event(@period.id)
+      else
+      end
     else
-      render 'new'
+      @period.save
+      render 'newmodal.js.erb'
     end
   end
 
@@ -119,7 +123,7 @@ class PeriodsController < ApplicationController
   end
 
   def update
-    byebug
+    # byebug
     @period.update_attributes(periods_params)
     if sanitize_group_params.count > 0
       user = User.find(*sanitize_group_params)
@@ -143,12 +147,12 @@ class PeriodsController < ApplicationController
       # SUGGEST: should be done in background and if failed, notify dev
       update_event(@period.google_event_id)
     else
-      redirect_to @period
+      render 'edit.js.erb'
     end
   end
 
   def destroy
-    byebug
+    # byebug
     @period = Period.destroy(params[:id])
     delete_event(@period.google_event_id, @period.id, params[:attribute])
   end
@@ -167,10 +171,12 @@ class PeriodsController < ApplicationController
     elsif @period.done?
       @period.update(period_status: 1)  
     end
-    respond_to do |format|
-      format.html { redirect_to periods_path }
-      format.js { render "change_status.js.erb" }
-    end
+    update_event(@period.google_event_id)
+    # respond_to do |format|
+    #   format.html { redirect_to periods_path }
+    #   # format.js { render "change_status.js.erb" }
+    #   format.js { render "update.js.erb" }
+    # end
   end
 
   private
@@ -254,7 +260,7 @@ class PeriodsController < ApplicationController
   end
 
   def delete_event(event_id, period_id, source_of_action)
-    byebug
+    # byebug
     begin
       @period_id = period_id
       client = Signet::OAuth2::Client.new(client_options)
@@ -282,7 +288,7 @@ class PeriodsController < ApplicationController
   end
 
   def update_event(event_id)
-    byebug
+    # byebug
     begin
       client = Signet::OAuth2::Client.new(client_options)
       client.update!(session[:authorization])

@@ -5,6 +5,13 @@ class Period < ApplicationRecord
   acts_as_taggable_on :groupings
   attr_accessor :date_range
 
+  validates :start_time, :presence => true
+  validates :end_time, :presence => true
+  validates :description, :presence => true
+  validates :subject, :presence => true
+  validates :period_status, :presence => true
+  validates :tutor_id, :presence => true
+  validates :group_id, :presence => true
 
   enum period_status: [:done, :incomplete]
 

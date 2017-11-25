@@ -90,5 +90,13 @@
     // })
   })
 
+  $('.modal').on('hidden.bs.modal', function (e) { 
+    // $('.modal-backdrop').remove();
+    console.log('clear')
+    $('.modal').modal('hide'); 
+    $(".fade.in").remove();
+    $('body').removeClass('modal-open');
+    $('.modal-backdrop').remove();
+  })
 
 </script>

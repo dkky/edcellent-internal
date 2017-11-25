@@ -24,6 +24,20 @@
 //= require bootstrap-datepicker
 //= require select2
 
+// $modal.on('hidden', function () {
+//   $('.modal-backdrop').remove();
+// });
+  
+// $(document).ready(function() {
+//   console.log( "ready!" );
+//   $(".modal").on("hidden.bs.modal", function () {
+//     debugger
+//   });
+//   $('.modal').on('shown.bs.modal', function () {
+//     alert('hehe')
+//   });
+// });
+
 var initialize_calendar;
 initialize_calendar = function() {
   $('#f-calendar').each(function(){
@@ -97,17 +111,17 @@ initialize_calendar = function() {
         });
       },
       eventClick: function(event, jsEvent, view) {
-        $('.fc-content').on('click', function(e) {
-          if (e.target != this)
-            return;
-
+        // $('.fc-content').on('click', function(e) {
+        //   console.log('asa')
+        //   if (e.target != this)
+        //     return;
           $.getScript(event.edit_url, function() {
             // $('#event_date_range').val(moment(event.start).format("MM/DD/YYYY HH:mm") + ' - ' + moment(event.end).format("MM/DD/YYYY HH:mm"))
             // date_range_picker();
             // $('.start_hidden').val(moment(event.start).format('YYYY-MM-DD HH:mm'));
             // $('.end_hidden').val(moment(event.end).format('YYYY-MM-DD HH:mm'));
           });
-        });
+        // });
       }
     });
   })

@@ -1,0 +1,65 @@
+
+<div class="well well-small">
+  <div class=pull-right data-position="bottom">
+    <%= link_to "Reset filters", reset_filterrific_url, class: 'btn btn-default btn-sm' %>
+  </div>  
+  <div class="chardin_box" data-position='bottom'>
+    <%= page_entries_info groups, model: 'group' %>
+  </div> 
+
+  <div class="chardin_box" data-position='bottom'>
+    <%= render_filterrific_spinner %>
+  </div>
+</div>
+
+
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>No.</th>
+      <th>Name</th>
+      <th>Students</th>
+      <th>Tutor in Charge</th>
+    </tr>
+  </thead>
+  <tbody>
+  <div id="all_groups">
+    <% @groups.order("created_at DESC").each_with_index do |group, i| %>
+      <tr id="group_<%= group.id %>">
+        <td><%= i + 1 %></td>
+        <td><%= group.name %></td>
+        <td><%= group.users.map {|u| u.name} %></td>
+        <td>
+          <%= select_tag "tutors", options_for_select(User.tutor.map {|i| [i.name,i.id]}), { hide_label: true,prompt: group.tutor_list , class: 'tutor_for_groups'} %>
+        </td>
+   </div> 
+  <% end %> 
+  </tbody>
+</table>
+
+<div class="chardin_box" data-position='top'>
+  <%= will_paginate groups, renderer: BootstrapPagination::Rails %>
+</div>
+
+<script type="text/javascript">
+   $(document).on('turbolinks:load', function(){
+      $('.tutor_for_groups').on('change', function() {
+        var tutorId = this.value
+        var groupId = this.parentElement.parentElement.id
+        debugger
+        $.ajax({
+          method: "PATCH",
+          url: "/admin/groups/" + groupId,
+          data: { tutor_id: tutorId},
+          dataType: 'script'
+        });
+        // if ( $("#tutor_for_groups option:selected").text() == "Carolyn Zhang" )
+        // {
+        //   alert('lol');
+        // } else {
+          
+        //   alert('not her');
+        // }
+      });
+    });
+</script>

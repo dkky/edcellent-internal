@@ -1,5 +1,7 @@
 $('#f-calendar').fullCalendar('removeEvents', [<%= @period_id %>])
-
 <% if source_of_action == "delete_period_modal" %>
   $('.modal').modal('hide'); 
+  $(".fade.in").remove();
+  $('body').removeClass('modal-open');
+  $('.modal-backdrop').remove();
 <% end %>

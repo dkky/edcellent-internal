@@ -7,10 +7,11 @@ json.array!(@periods) do |period|
   end
   if period.period_status == "done"
     json.color "blue"
-    json.icon '<i class="fa fa-window-close fa-lg" style="color:black; float:left;"></i>'
+    json.icon ''
   else
     json.color "red"
-    json.icon '<i class="fa fa-check fa-lg" style="color:black; float:left;"></i>'
+    json.icon ''
+    # json.icon '<i class="fa fa-check fa-lg" style="color:black; float:left;"></i>'
   end
   json.student array.join(", ")
   json.start period.start_time

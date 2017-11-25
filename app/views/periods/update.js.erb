@@ -4,5 +4,8 @@ $('#f-calendar').fullCalendar(
   <%= raw render(partial: 'periods/period.json.jbuilder', locals: { period: @period }) %>, 
   true
 );
-$('.modal').modal('hide');
+$('#edit_event').modal('hide');
+$(".fade.in").remove();
+$('body').removeClass('modal-open');
+$('.modal-backdrop').remove();
  

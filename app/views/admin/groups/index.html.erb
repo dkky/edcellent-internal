@@ -1,0 +1,32 @@
+
+<h1>Groups</h1>
+
+
+<div class="well">
+  <%= form_for_filterrific @filterrific do |f| %>
+    <div class="row">
+
+
+      <div class="col-md-2">
+        <div class="form-group chardin_box" data-position='top'>               
+          <label> Tutor </label>
+          <%= f.select :with_different_tutor,
+                     @filterrific.select_options[:with_different_tutor],
+                     { include_blank: '- Any -' }, 
+                     { class: 'form-control' }     
+          %>
+        </div>
+      </div>
+
+    
+  <% end %>
+</div>
+<br>
+
+<div id="results">
+  <%= render partial: 'admin/groups/list', locals: { :groups => @groups } %>
+</div>
+
+<script type="text/javascript">
+  $('.js-datepicker').datepicker();
+</script>
