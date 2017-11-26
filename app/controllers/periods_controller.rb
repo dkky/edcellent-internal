@@ -59,7 +59,13 @@ class PeriodsController < ApplicationController
 
   def index
     if current_user.admin?
-      @periods = Period.all
+      if params[:search]
+        @periods = Period.search { fulltext params[:search] }.results
+
+        # @periods = Period.search(params[:search]).order("created_at DESC")
+      else
+        @periods = Period.all
+      end    
     elsif current_user.tutor?
       @periods = current_user.periods
     elsif current_user.student?
@@ -68,9 +74,16 @@ class PeriodsController < ApplicationController
   end
 
   def calendar
+    # byebug
     @period = Period.new
+    # byebug
     if current_user.admin?
-      @periods = Period.all
+      if params[:search] 
+        @periods = Period.search { fulltext params[:search] }.results
+        render 'periods/search_result'
+      else
+        @periods = Period.all
+      end
     elsif current_user.tutor?
       @periods = current_user.periods
     elsif current_user.student?
@@ -81,8 +94,9 @@ class PeriodsController < ApplicationController
   def create
     # byebug
     @period = Period.new(periods_params)
+    # byebug
     if sanitize_group_params.count > 0
-      if existing_group = Group.joins(:users).where('users.id' => sanitize_group_params).select {|g| g.user_ids == sanitize_group_params}.first
+      if existing_group = Group.joins(:users).where('users.id' => sanitize_group_params).select {|g| g.user_ids.sort == sanitize_group_params.sort}.first
         @period.group_id = existing_group.id
       else
         new_group = Group.new
@@ -103,6 +117,7 @@ class PeriodsController < ApplicationController
       if @period.save
         create_event(@period.id)
       else
+        render 'newmodal.js.erb'
       end
     else
       @period.save

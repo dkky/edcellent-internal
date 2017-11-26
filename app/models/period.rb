@@ -26,6 +26,16 @@ class Period < ApplicationRecord
     ]
   )
 
+  searchable do
+    text :subject
+    text :tutor do
+      tutor.first_name
+    end
+    text :student do
+      group.users.map { |user| user.first_name } 
+    end
+  end
+
   scope :with_different_status, lambda { |period_status|
     where(period_status: period_status)
   }
@@ -73,6 +83,15 @@ class Period < ApplicationRecord
     ActsAsTaggableOn::Tagging.includes(:tag).where(context: 'groupings').pluck(:name).uniq
   end
 
+  # def self.search(search)
+  #   if search
+  #     tutor = User.where("first_name LIKE ?", "%#{search}%").first
+  #     # where("subject LIKE ?", "%#{search}%") 
+  #     where(tutor_id: tutor.id) 
+  #   else
+  #     all
+  #   end
+  # end
   # def self.session_number(session_num)
   #   if session_num <= 10
   #     return session_num
@@ -92,3 +111,5 @@ class Period < ApplicationRecord
   #   end
   # end
 end
+
+

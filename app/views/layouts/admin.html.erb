@@ -55,8 +55,14 @@
         </div><!-- /.container -->
       </nav><!-- /.navbar -->
   </div><!-- /.container-fluid -->
-
+  
   <body>
+    
+    <div id="flash">
+      <% flash.each do |key, value| -%>
+        <div id="flash_<%= key %>"><%=h value %></div>
+      <% end %>
+    </div>
     <div class="container">
       <%= yield %>
     </div>
