@@ -79,7 +79,7 @@ class PeriodsController < ApplicationController
   end
 
   def create
-    byebug
+    # byebug
     @period = Period.new(periods_params)
     if sanitize_group_params.count > 0
       if existing_group = Group.joins(:users).where('users.id' => sanitize_group_params).select {|g| g.user_ids == sanitize_group_params}.first
