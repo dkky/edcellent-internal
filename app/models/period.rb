@@ -1,6 +1,11 @@
 class Period < ApplicationRecord
+  include PgSearch
+
   belongs_to :tutor, class_name: "User", foreign_key: :tutor_id
   belongs_to :group
+  has_many :user_groups, through: :group
+  has_many :students, through: :user_groups, source: :user
+  # has_many :students, through: :user_groups, source: :periods, class_name: "User", foreign_key: "user_id"
   acts_as_taggable # Alias for acts_as_taggable_on :tags
   acts_as_taggable_on :groupings
   attr_accessor :date_range
@@ -26,15 +31,27 @@ class Period < ApplicationRecord
     ]
   )
 
-  searchable do
-    text :subject
-    text :tutor do
-      tutor.first_name
-    end
-    text :student do
-      group.users.map { |user| user.first_name } 
-    end
-  end
+  pg_search_scope :calendar_search, :associated_against => {
+    :students => [:first_name, :last_name],
+    :tutor => [:first_name, :last_name]
+  }
+
+  # multisearchable :against => [users_in_group]
+  # pg_search_scope :tutor_search, :associated_against => {
+  #   # :group => [users_in_group],
+  #   :tutor => [:first_name, :last_name]
+  # }
+
+  # searchable do
+  #   text :subject
+  #   text :tutor do
+  #     tutor.first_name
+  #   end
+  #   text :student do
+  #     group.users.map { |user| user.first_name } 
+  #   end
+  # end
+  # for sunspot...
 
   scope :with_different_status, lambda { |period_status|
     where(period_status: period_status)
@@ -62,6 +79,10 @@ class Period < ApplicationRecord
 
   self.per_page = 10
 
+  def users_in_group
+    # group.users.map {|u| u.name}
+    group.users.first.name 
+  end
 
   def self.options_for_different_status
     period_statuses.keys

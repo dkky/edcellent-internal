@@ -52,9 +52,11 @@ gem 'bootstrap-wysihtml5-rails'
 gem 'bootstrap-datepicker-rails', :require => 'bootstrap-datepicker-rails',
                               :git => 'git://github.com/Nerian/bootstrap-datepicker-rails.git'
 gem 'simple_form'
-gem 'sunspot_rails'
-gem 'sunspot_solr' # optional pre-packaged Solr distribution for use in development
-gem 'progress_bar'
+# gem 'sunspot_rails'
+# gem 'sunspot_solr' # optional pre-packaged Solr distribution for use in development
+# gem 'progress_bar'
+gem 'pg_search'
+
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development

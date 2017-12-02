@@ -60,7 +60,8 @@ class PeriodsController < ApplicationController
   def index
     if current_user.admin?
       if params[:search]
-        @periods = Period.search { fulltext params[:search] }.results
+        @periods = Period.calendar_search(params[:search])
+        # @periods = Period.search { fulltext params[:search] }.results
 
         # @periods = Period.search(params[:search]).order("created_at DESC")
       else
@@ -79,7 +80,8 @@ class PeriodsController < ApplicationController
     # byebug
     if current_user.admin?
       if params[:search] 
-        @periods = Period.search { fulltext params[:search] }.results
+        @periods = Period.calendar_search(params[:search])
+        # @periods = Period.search { fulltext params[:search] }.results
         render 'periods/search_result'
       else
         @periods = Period.all
