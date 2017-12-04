@@ -3,8 +3,27 @@
 <% end %>
 <br>
 <br>
+<% if current_user.admin? %>
   <div class="row">
-    <%= form_tag(root_path, :method => "get", id: "search-form") do %>
+    <%= form_tag(admin_periods_path, :method => "get", id: "search-form") do %>
+          <div class="col-md-6">
+              <div id="custom-search-input">
+                  <div class="input-group col-md-12">
+                    <%= text_field_tag :search, params[:search], placeholder: "Search for Classes based on Tutors, Students & Subjects", class: "form-control input-lg"   %>
+                      <!-- <input type="text" class="form-control input-lg" placeholder="Buscar" /> -->
+                      <span class="input-group-btn">
+                        <%= button_tag(type: "submit", class: "btn btn-info btn-lg") do %>
+                         <span><i class='glyphicon glyphicon-search'> </i></span>
+                        <% end %>
+                      </span>
+                  </div>
+              </div>
+          </div>
+    <% end %>
+  </div>  
+<% else %>
+  <div class="row">
+    <%= form_tag(calendar_search_periods_path, :method => "get", id: "search-form") do %>
           <div class="col-md-6">
               <div id="custom-search-input">
                   <div class="input-group col-md-12">
@@ -20,6 +39,7 @@
           </div>
     <% end %>
   </div>
+<% end %>
 <br>
 <br>
 <br>

@@ -1,3 +1,4 @@
+
 <div class="well well-small">
   <div class=pull-right data-position="bottom">
     <%= link_to "Reset filters", reset_filterrific_url, class: 'btn btn-default btn-sm' %>
@@ -10,74 +11,39 @@
   </div>
 </div>
 
-
-<div class="row">
-  <% periods.each do |period| %>
-    <div class="col-md-4" id="session_<%= period.id %>">
-    <div class="card">
-      <div class="cnrflash">
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>No.</th>
+      <th>DateTime</th>
+      <th>Name</th>
+      <th>Description</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+  <div id="all_sessions">
+    <% @periods.each_with_index do |period, i| %>
+      <tr id="session_<%= period.id %>">
+        <td><%= i + 1 %></td>
+        <td><%= period.start_time.to_formatted_s(:long) %></td>
+        <td><%= period.title %></td>
+        <td><%= period.description %></td>
         <% if period.incomplete? %>
-          <div class="cnrflash-inner">
-              <span class="cnrflash-label">
-                INCOMPLETE
-                <br>
-              </span>
-          </div>
+          <td><%= link_to 'Undo Incomplete', admin_change_period_status_path(period), method: :get, remote: true %></td>
         <% else %>
-          <div class="cnrflash-inner" style="background-color: black">
-              <span class="cnrflash-label">
-                COMPLETE
-                <br>
-              </span>
-          </div>          
+          <td><%= link_to 'Undo Done', admin_change_period_status_path(period), method: :get, remote: true %></td>
         <% end %>
-      </div>
-            <div class="card-content">
-              <div class="card-header-blue">
-                   <h1 class="card-heading"><%= period.description %></h1>
-                </div>
-                <div class="card-body">
-                <p class="card-p">
-                  Tutor: <%= period.tutor.name %>
-                </p>  
-                  <% period.group.users.each do |u| %>               
-                <p class="card-p">
-                  Student: <%= u.name %>
-                </p>
-                <% end %>
-                <p class="card-p">
-                  Start Time: <%= period.start_time.to_formatted_s(:long)  %>
-                </p>                
-                <p class="card-p">
-                  End Time: <%= period.end_time.to_formatted_s(:long)   %>
-                </p>  
-
-              </div>
-              
-              <nav class="nav-tabs">
-                <ul class="nav nav-pills pull-left">
-                        <li class="card-action"><%= link_to period do %><i class="fa fa-eye"></i><% end %></li>
-                        <li class="card-action"><%= link_to duplicate_session_path(period) do %><i class="fa fa-clone"></i><% end %></li>
-                            <li class="card-action"><%= link_to  period, method: :delete, data: { confirm: 'Are you sure?' }, remote: true do %><i class="fa fa-trash-o"></i><% end %></li>
-                        <li class="card-action dropup">
-                          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><%= "#{period.period_status.capitalize}" %><span class="caret"></span></a>
-
-                          <ul class="dropdown-menu">
-                            <li><strong>Change to</strong></li>
-                            <li><%= link_to "#{(Period.period_statuses.keys - [period.period_status])[0].capitalize}", change_period_status_path(period), method: :get, remote: true %></li>
-                          </ul>
-                        </li>
-                    </ul>
-                
-              </nav>
-                
-            </div>
-        </div>
-    </div>
-  <% end %>
-</div>
+        <td class="icon-padding"><%= link_to period do %><i class="fa fa-eye"></i><% end %></td>
+        <td class="icon-padding"><%= link_to edit_period_path(period) do %><i class="fa fa-pencil-square-o"></i><% end %></td>
+        <td class="icon-padding"><%= link_to duplicate_session_path(period) do %><i class="fa fa-clone"></i><% end %></td>
+        <td class="icon-padding"><%= link_to admin_period_path(period), method: :delete, data: { confirm: 'Are you sure?' }, remote: true do %><i class="fa fa-trash-o"></i><% end %></td>
+      </tr>
+   </div> 
+  <% end %> 
+  </tbody>
+</table>
 
 <div class="chardin_box" data-position='top'>
   <%= will_paginate periods, renderer: BootstrapPagination::Rails %>
 </div>
-

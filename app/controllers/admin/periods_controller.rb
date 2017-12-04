@@ -3,15 +3,44 @@ class Admin::PeriodsController < ApplicationController
   layout :determine_layout, only: [:index]
 
   def index
-    if current_user.admin?
-      @periods = Period.all
-    elsif current_user.tutor?
-      @periods = current_user.periods
-    elsif current_user.student?
-      @periods = current_user.group.periods
-    end
+    if params[:search] && current_user.admin?
+      @periods = Period.calendar_search(params[:search])
+      if @periods.count > 0
+        @filterrific = initialize_filterrific(
+          @periods,
+          params[:filterrific],
+          select_options: {
+            with_different_status: Period.options_for_different_status,
+            with_different_group: Period.options_for_different_group_admin,
+            with_different_grouping: Period.options_for_tagging 
+          },
+        ) or return
+        @periods = @filterrific.find.page(params[:page])
 
-    @filterrific = initialize_filterrific(
+        respond_to do |format|
+          format.html 
+          format.js { render 'index.js.erb'}        
+        end
+      else
+        @periods = Period.all
+        @filterrific = initialize_filterrific(
+          Period,
+          params[:filterrific],
+          select_options: {
+            with_different_status: Period.options_for_different_status,
+            with_different_group: Period.options_for_different_group_admin,
+            with_different_grouping: Period.options_for_tagging 
+          },
+        ) or return
+        @periods = @filterrific.find.page(params[:page])
+        respond_to do |format|
+          format.html 
+          format.js { render 'index.js.erb'}
+        end
+      end
+    else
+      @periods = Period.all
+      @filterrific = initialize_filterrific(
         Period,
         params[:filterrific],
         select_options: {
@@ -21,11 +50,10 @@ class Admin::PeriodsController < ApplicationController
         },
       ) or return
       @periods = @filterrific.find.page(params[:page])
-
-      
-    respond_to do |format|
-      format.html 
-      format.js 
+      respond_to do |format|
+        format.html 
+        format.js { render 'calendar_search.js.erb'}
+      end
     end
   end
 
@@ -44,7 +72,7 @@ class Admin::PeriodsController < ApplicationController
 
   def destroy
     @period = Period.destroy(params[:id])
-    delete_event(@period.google_event_id)
+    delete_event(@period.google_event_id, @period.id)
   end
 
   private
@@ -53,8 +81,10 @@ class Admin::PeriodsController < ApplicationController
     redirect_to '/sign_in' unless current_user
   end
 
-  def delete_event(event_id)
+  def delete_event(event_id, period_id)
     begin
+      @period_id = period_id
+      @periods = Period.all
       client = Signet::OAuth2::Client.new(client_options)
       client.update!(session[:authorization])
       service = Google::Apis::CalendarV3::CalendarService.new

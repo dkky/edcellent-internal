@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   resources :periods do
     collection do
       get :search
+      get :calendar_search
     end
   end
 

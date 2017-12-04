@@ -1,5 +1,5 @@
 class PeriodsController < ApplicationController
-  protect_from_forgery except: :duplicate
+  protect_from_forgery except: [:duplicate, :calendar_search]
   before_action :set_period, only: [:show, :edit, :update, :destroy, :drop]
   before_action :check_access, only: [:index, :show, :edit, :update, :destroy, :calendar, :search]
   before_action :sanitize_page_params, only: [:create, :update]
@@ -57,16 +57,10 @@ class PeriodsController < ApplicationController
     end
   end
 
+# change this whole thing........it's a mess
   def index
     if current_user.admin?
-      if params[:search]
-        @periods = Period.calendar_search(params[:search])
-        # @periods = Period.search { fulltext params[:search] }.results
-
-        # @periods = Period.search(params[:search]).order("created_at DESC")
-      else
-        @periods = Period.all
-      end    
+      @periods = Period.all
     elsif current_user.tutor?
       @periods = current_user.periods
     elsif current_user.student?
@@ -74,18 +68,91 @@ class PeriodsController < ApplicationController
     end
   end
 
+  def calendar_search
+    # byebug
+    if params[:search] && current_user.admin?
+      @periods = Period.calendar_search(params[:search])
+      if @periods.count > 0
+        @filterrific = initialize_filterrific(
+          @periods,
+          params[:filterrific],
+          select_options: {
+            with_different_status: Period.options_for_different_status,
+            with_different_group: Period.options_for_different_group_admin,
+            with_different_grouping: Period.options_for_tagging 
+          },
+        ) or return
+        @periods = @filterrific.find.page(params[:page])
+
+        respond_to do |format|
+          format.html 
+          format.js { render 'calendar_search.js.erb'}        
+        end
+      else
+        @periods = Period.all
+        @filterrific = initialize_filterrific(
+          Period,
+          params[:filterrific],
+          select_options: {
+            with_different_status: Period.options_for_different_status,
+            with_different_group: Period.options_for_different_group_admin,
+            with_different_grouping: Period.options_for_tagging 
+          },
+        ) or return
+        @periods = @filterrific.find.page(params[:page])
+        respond_to do |format|
+          format.html 
+          format.js { render 'calendar_search.js.erb'}
+        end
+      end
+    else
+      @periods = Period.all
+      @filterrific = initialize_filterrific(
+        Period,
+        params[:filterrific],
+        select_options: {
+          with_different_status: Period.options_for_different_status,
+          with_different_group: Period.options_for_different_group_admin,
+          with_different_grouping: Period.options_for_tagging 
+        },
+      ) or return
+      @periods = @filterrific.find.page(params[:page])
+      respond_to do |format|
+        format.html 
+        format.js { render 'calendar_search.js.erb'}
+      end
+    end
+  end
+
+
   def calendar
     # byebug
     @period = Period.new
     # byebug
     if current_user.admin?
-      if params[:search] 
-        @periods = Period.calendar_search(params[:search])
+      # if params[:search] 
+        # @periods = Period.calendar_search(params[:search])
         # @periods = Period.search { fulltext params[:search] }.results
-        render 'periods/search_result'
-      else
+        # render 'periods/search_result'
+      # @filterrific = initialize_filterrific(
+      #   Period,
+      #   params[:filterrific],
+      #   select_options: {
+      #     with_different_status: Period.options_for_different_status,
+      #     with_different_group: Period.options_for_different_group_admin,
+      #     with_different_grouping: Period.options_for_tagging 
+      #   },
+      # ) or return
+      # @periods = @filterrific.find.page(params[:page])
+
+      # render 'index.js.erb'
+      # respond_to do |format|
+      #   format.html 
+      #   format.js { render 'index.js.erb'}
+      # end
+      # else
         @periods = Period.all
-      end
+      # end
     elsif current_user.tutor?
       @periods = current_user.periods
     elsif current_user.student?

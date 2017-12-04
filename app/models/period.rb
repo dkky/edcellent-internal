@@ -12,8 +12,8 @@ class Period < ApplicationRecord
 
   validates :start_time, :presence => true
   validates :end_time, :presence => true
-  validates :description, :presence => true
-  validates :subject, :presence => true
+  # validates :description, :presence => true
+  # validates :subject, :presence => true
   validates :period_status, :presence => true
   validates :tutor_id, :presence => true
   validates :group_id, :presence => true

@@ -1,0 +1,98 @@
+<div class="modal fade" id="edit_event">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Edit Event</h4>
+      </div>
+      <div class="modal-body">
+        <%= render 'edit_form', period: @period %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $('#edit_event').on('shown.bs.modal', function (e) {     
+    $('#class_type').on('change', function() {
+      if (this.value == "yes")
+      {
+        $("#power-search-student-div").toggle();
+      } else {
+        $("#power-search-student-div").hide();
+      }
+    });
+  });
+
+  $('#edit_event').on('shown.bs.modal', function (e) { 
+     $('.wysihtml5').each(function(i, elem) {
+       $(elem).wysihtml5({
+         toolbar: {
+           "link": true
+         }
+       });
+     });
+     $('[data-wysihtml5-dialog]').on('hidden.bs.modal', function(){
+       $('.modal-backdrop').remove();
+     })
+  })
+
+
+ 
+    $(".select-example-3").select2({
+      maximumSelectionLength: 10,
+      placeholder: "Select Student",
+      createTag: function (params) {
+        return {
+          id: params.term,
+          text: params.term,
+          newOption: false
+        }
+      },
+      ajax: {
+        url: "/admin/users/select2_list_student",
+        dataType: 'json',
+        delay: 250,
+        data: function (params) {
+          return {
+            q: params.term, // search term
+            page: params.page
+          };
+        },
+        processResults: function (data, params) {
+          return { results: $.map( data, function(client, i) {
+              var displayResult = client.first_name + ' ' + client.last_name 
+                  return { id: client.id, text: displayResult}
+              } ) };          
+        }
+      },
+    });
+
+  $('#edit_event').on('shown.bs.modal', function (e) { 
+    $('.modal_start_time').daterangepicker(
+      {
+          singleDatePicker: true,
+          timePicker: true,
+          locale: {
+            format: 'YYYY-MM-DD HH:mm A'
+          },
+      });    
+    $('.modal_end_time').daterangepicker(
+      {
+          singleDatePicker: true,
+          timePicker: true,
+          locale: {
+            format: 'YYYY-MM-DD HH:mm A'
+          },
+    });
+  })
+
+  $('.modal').on('hidden.bs.modal', function (e) { 
+    // $('.modal-backdrop').remove();
+    console.log('clear')
+    $('.modal').modal('hide'); 
+    $(".fade.in").remove();
+    $('body').removeClass('modal-open');
+    $('.modal-backdrop').remove();
+  })
+</script>
