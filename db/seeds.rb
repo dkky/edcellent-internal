@@ -43,3 +43,5 @@ puts "#{User.where(user_access: 'admin').count} admin have been created."
 # puts "#{Period.all.count} sessions have been created."
 
 puts "done"
+
+User.create(first_name: 'KY', last_name: 'Kang',email: 'kai@edcellent.com',password: '12345678', user_access: 2)
