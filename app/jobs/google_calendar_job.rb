@@ -93,7 +93,7 @@ class GoogleCalendarJob < ApplicationJob
           {email: 'sbrin@example.com'},
         ],
       })
-      result = service.insert_event('noone.knowu@gmail.com', event)
+      result = service.insert_event(@period.tutor.email, event)
       ### email to be changed later...(@period.tutor.email)
       @period.google_event_id = result.id
       @period.save
