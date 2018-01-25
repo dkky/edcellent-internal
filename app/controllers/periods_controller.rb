@@ -71,7 +71,7 @@ class PeriodsController < ApplicationController
   end
 
   def calendar_search
-    # byebug
+    byebug
     if params[:search] && current_user.admin?
       @periods = Period.calendar_search(params[:search])
       if @periods.count > 0
@@ -107,10 +107,10 @@ class PeriodsController < ApplicationController
           format.js { render 'calendar_search.js.erb'}
         end
       end
-    else
-      @periods = Period.all
+    elsif params[:search] && current_user.tutor?
+      @periods = current_user.periods
       @filterrific = initialize_filterrific(
-        Period,
+        @periods,
         params[:filterrific],
         select_options: {
           with_different_status: Period.options_for_different_status,
