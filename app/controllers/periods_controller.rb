@@ -4,6 +4,7 @@ class PeriodsController < ApplicationController
   before_action :check_access, only: [:index, :show, :edit, :update, :destroy, :calendar, :search]
   before_action :sanitize_page_params, only: [:create, :update]
   before_action :sanitize_time_params, only: [:update]
+  before_action :check_google_calendar_authorization, only: [:new, :calendar, :index]
 
   respond_to :html, :json
 
@@ -126,7 +127,6 @@ class PeriodsController < ApplicationController
 
 
   def calendar
-    # byebug
     @period = Period.new
     # byebug
     if current_user.admin?
@@ -161,9 +161,7 @@ class PeriodsController < ApplicationController
   end
 
   def create
-    # byebug
     @period = Period.new(periods_params)
-    # byebug
     if sanitize_group_params.count > 0
       if existing_group = Group.joins(:users).where('users.id' => sanitize_group_params).select {|g| g.user_ids.sort == sanitize_group_params.sort}.first
         @period.group_id = existing_group.id
@@ -181,10 +179,13 @@ class PeriodsController < ApplicationController
       end
       @period.grouping_list = "1 to " + @period.group.users.count.to_s
       @period.title = @period.subject + ': ' + @period.group.name + ' - ' + @period.tutor.first_name
-      
-      # SUGGEST: should be done in background and if failed, notify dev
       if @period.save
-        create_event(@period.id)
+        # byebug
+    #     render 'periods/create.js.erb' 
+        GoogleCalendarJob.perform_later(action: 'create', period_id: @period.id, session: session[:authorization], client_options: client_options)
+        render 'create.js.erb'
+        # create_event(@period.id)
+        # byebug
       else
         render 'newmodal.js.erb'
       end
@@ -203,11 +204,13 @@ class PeriodsController < ApplicationController
 
   def drop
     @period.update_attributes(periods_params)
-    update_event(@period.google_event_id)
+    # update_event(@period.google_event_id)
+    GoogleCalendarJob.perform_later(action: 'update', google_event_id: @period.google_event_id, period_id: @period.id, session: session[:authorization], client_options: client_options)
+    render "update.js.erb"
   end
 
   def update
-    # byebug
+    byebug
     @period.update_attributes(periods_params)
     if sanitize_group_params.count > 0
       user = User.find(*sanitize_group_params)
@@ -229,16 +232,31 @@ class PeriodsController < ApplicationController
     @period.title = @period.subject + ': ' + @period.group.name + ' - ' + @period.tutor.first_name
     if @period.save
       # SUGGEST: should be done in background and if failed, notify dev
-      update_event(@period.google_event_id)
+      # update_event(@period.google_event_id)
+      GoogleCalendarJob.perform_later(action: 'update', google_event_id: @period.google_event_id, period_id: @period.id, session: session[:authorization], client_options: client_options)
+      render "update.js.erb"
     else
       render 'edit.js.erb'
     end
   end
 
   def destroy
-    # byebug
+    byebug
     @period = Period.destroy(params[:id])
-    delete_event(@period.google_event_id, @period.id, params[:attribute])
+    GoogleCalendarJob.perform_later(action: 'delete', google_event_id: @period.google_event_id, period_id: @period.id, session: session[:authorization], client_options: client_options)
+    # delete_event(@period.google_event_id, @period.id, params[:attribute])
+    @period_id = @period.id
+    if params[:attribute] == "delete_period_modal" || params[:attribute] == "delete_period_calendar"
+      respond_to do |f|
+        f.html { redirect_to root_path }
+        f.js { render 'destroy_in_modal.js.erb', locals: { source_of_action: params[:attribute] } }
+      end           
+    else
+      respond_to do |f|
+        f.html { redirect_to root_path }
+        f.js { render 'destroy.js.erb' }
+      end   
+    end
   end
 
   def duplicate
@@ -297,6 +315,7 @@ class PeriodsController < ApplicationController
   end
 
   def create_event(event_id)
+    byebug
     begin
       client = Signet::OAuth2::Client.new(client_options)
       client.update!(session[:authorization])
@@ -334,6 +353,7 @@ class PeriodsController < ApplicationController
       # email to be changed later...
       @period.google_event_id = result.id
       @period.save
+      byebug
       render "periods/create.js.erb"
     rescue Google::Apis::AuthorizationError
       # access token expired after an hour

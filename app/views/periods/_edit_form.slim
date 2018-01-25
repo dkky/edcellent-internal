@@ -10,7 +10,7 @@ h1 Editing Lesson
   p  
   = f.text_field :description, label: 'Description (Optional)', class: 'text-input'
   p  
-  = f.text_field :note, label: 'Learning Outcome',rows: '8',class: 'text-input wysihtml5'
+  = f.text_area :note, label: 'Learning Outcome',rows: '8',class: 'text-input wysihtml5'
   p
     b Your students: 
     - @period.group.users.each do |user|

@@ -56,6 +56,8 @@ gem 'simple_form'
 # gem 'sunspot_solr' # optional pre-packaged Solr distribution for use in development
 # gem 'progress_bar'
 gem 'pg_search'
+gem 'sidekiq'
+
 
 
 # Use Capistrano for deployment
