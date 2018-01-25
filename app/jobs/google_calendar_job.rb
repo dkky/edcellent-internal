@@ -31,7 +31,6 @@ class GoogleCalendarJob < ApplicationJob
   end
 
   def update_event(event_id, session, client_options, period_id)
-    byebug
     begin
       client = Signet::OAuth2::Client.new(client_options)
       client.update!(session)

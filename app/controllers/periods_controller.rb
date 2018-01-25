@@ -211,7 +211,6 @@ class PeriodsController < ApplicationController
   end
 
   def update
-    byebug
     @period.update_attributes(periods_params)
     if sanitize_group_params.count > 0
       user = User.find(*sanitize_group_params)
@@ -242,7 +241,6 @@ class PeriodsController < ApplicationController
   end
 
   def destroy
-    byebug
     @period = Period.destroy(params[:id])
     GoogleCalendarJob.perform_later(action: 'delete', google_event_id: @period.google_event_id, period_id: @period.id, session: session[:authorization], client_options: client_options)
     # delete_event(@period.google_event_id, @period.id, params[:attribute])
