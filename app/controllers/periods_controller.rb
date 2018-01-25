@@ -43,7 +43,8 @@ class PeriodsController < ApplicationController
         params[:filterrific],
         select_options: {
           with_different_status: Period.options_for_different_status,
-          with_different_group: Period.options_for_different_group(current_user)
+          with_different_group: Period.options_for_different_group(current_user),
+          with_different_grouping: Period.options_for_tagging 
         },
         default_filter_params: {
 
