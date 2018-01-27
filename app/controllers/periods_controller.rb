@@ -162,7 +162,12 @@ class PeriodsController < ApplicationController
   end
 
   def create
+    byebug
     @period = Period.new(periods_params)
+    if current_user.tutor?
+      @period.tutor_id = current_user.id
+      @period.period_status = 1
+    end
     if sanitize_group_params.count > 0
       if existing_group = Group.joins(:users).where('users.id' => sanitize_group_params).select {|g| g.user_ids.sort == sanitize_group_params.sort}.first
         @period.group_id = existing_group.id
@@ -231,7 +236,6 @@ class PeriodsController < ApplicationController
     @period.grouping_list = "1 to " + @period.group.users.count.to_s
     @period.title = @period.subject + ': ' + @period.group.name + ' - ' + @period.tutor.first_name
     if @period.save
-      # SUGGEST: should be done in background and if failed, notify dev
       # update_event(@period.google_event_id)
       GoogleCalendarJob.perform_later(action: 'update', google_event_id: @period.google_event_id, period_id: @period.id, session: session[:authorization], client_options: client_options)
       render "update.js.erb"
