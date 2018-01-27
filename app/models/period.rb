@@ -98,6 +98,10 @@ class Period < ApplicationRecord
 
   def self.options_for_different_group_admin
     Period.all.map {|period| [period.group.name,period.group.id]}.uniq
+  end  
+
+  def self.options_for_different_group_based_on_tutors(tutor)
+    tutor.periods.map {|period| [period.group.name,period.group.id]}.uniq
   end
 
   def self.options_for_tagging
