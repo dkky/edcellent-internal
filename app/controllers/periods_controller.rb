@@ -193,7 +193,7 @@ class PeriodsController < ApplicationController
         if user.class == Array
           new_group.name = User.find(*sanitize_group_params).pluck(:first_name, :last_name).map {|arr| arr.join(" ") }.join(", ")
         else 
-          new_group.name = user.first_name + user.last_name
+          new_group.name = user.first_name + ' ' + user.last_name
         end
         new_group.save
         @period.group_id = new_group.id
