@@ -1,6 +1,6 @@
 class Admin::UsersController < ApplicationController
-  before_action :check_admin_access
-
+  before_action :check_admin_access, except: [:select2_list_student]
+  before_action :check_access, only: [:select2_list_student]
   respond_to :html, :json
 
   def new

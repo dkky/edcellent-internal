@@ -199,7 +199,7 @@ class PeriodsController < ApplicationController
         @period.group_id = new_group.id
       end
       @period.grouping_list = "1 to " + @period.group.users.count.to_s
-      @period.title = @period.subject + ': ' + @period.group.name + ' - ' + @period.tutor.first_name
+      @period.title = @period.subject + ': ' + @period.group.name + ' - ' + @period.tutor.first_name + ' ' + @period.session_number.to_s
       if @period.save
         # byebug
     #     render 'periods/create.js.erb' 
@@ -321,11 +321,7 @@ class PeriodsController < ApplicationController
   end
 
   def periods_params
-    params.require(:period).permit(:start_time, :end_time, :subject, :description, :note, :tutor_id, :period_status)
-  end
-
-  def check_access
-    redirect_to '/sign_in' unless current_user
+    params.require(:period).permit(:start_time, :end_time, :subject, :description, :note, :tutor_id, :period_status, :session_number)
   end
 
   def set_period

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180202091138) do
+ActiveRecord::Schema.define(version: 20180203020012) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -35,6 +35,7 @@ ActiveRecord::Schema.define(version: 20180202091138) do
     t.bigint "group_id"
     t.string "google_event_id"
     t.string "title"
+    t.decimal "session_number", precision: 4, scale: 2
     t.index ["group_id"], name: "index_periods_on_group_id"
   end
 
