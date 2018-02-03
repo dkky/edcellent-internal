@@ -1,5 +1,5 @@
 class Admin::PeriodsController < ApplicationController
-  before_action :check_access, only: [:index, :change_status]
+  before_action :check_admin_access
   layout :determine_layout, only: [:index]
 
   def index

@@ -1,4 +1,6 @@
 class Admin::GroupsController < ApplicationController
+  before_action :check_admin_access
+
   respond_to :html, :json
   layout :determine_layout, only: [:index]
 

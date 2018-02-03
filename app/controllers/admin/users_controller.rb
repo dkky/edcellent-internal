@@ -1,4 +1,6 @@
 class Admin::UsersController < ApplicationController
+  before_action :check_admin_access
+
   respond_to :html, :json
 
   def new
@@ -10,28 +12,28 @@ class Admin::UsersController < ApplicationController
     if user_params["user_access"] == "student"
       @user = User.new(user_params)
       @user.password = "123456"
-      if group_params[:groups].is_i?
-        # if it is a number, that means it exists in the database already
-        group_id = group_params[:groups]
-      else
-        # if not, add a new one in the group database
-        group = Group.create(name: group_params[:groups])
-        group_id = group.id
-      end
-      @user.group_ids = group_id  
+      # if group_params[:groups].is_i?
+      #   # if it is a number, that means it exists in the database already
+      #   group_id = group_params[:groups]
+      # else
+      #   # if not, add a new one in the group database
+      #   group = Group.create(name: group_params[:groups])
+      #   group_id = group.id
+      # end
+      # @user.group_ids = group_id  
       if @user.save
         @user.create_profile
-        redirect_to edit_admin_profile_path(user_id: @user.id)
+        redirect_to edit_admin_profile_path(id: @user.id)
       else
         @user = User.new
         render 'new'
+        # add error message if failed
       end
     else
       @user = User.new(user_params)
       @user.password = "123456"
       if @user.save
-        @user.create_profile
-        redirect_to edit_admin_profile_path(user_id: @user.id)
+        redirect_to root_path     
       else
         render 'new'
       end
@@ -83,9 +85,9 @@ class Admin::UsersController < ApplicationController
 
   def user_params
     if params[:user][:user_access] == "student"
-      params.require(:user).permit(:first_name,:last_name, :school, :year_level, :user_access, :wechat_account, :phone_number, :email)
+      params.require(:user).permit(:english_name, :first_name,:last_name, :school, :year_level, :user_access, :wechat_account, :phone_number, :email)
     else
-      params.require(:user).permit(:first_name,:last_name,:name, :user_access, :wechat_account, :phone_number, :email, :user_type)
+      params.require(:user).permit(:english_name, :first_name,:last_name,:name, :user_access, :wechat_account, :phone_number, :email, :user_type)
     end
   end
 

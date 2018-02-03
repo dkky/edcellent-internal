@@ -1,10 +1,13 @@
 class Admin::ProfilesController < ApplicationController
+  before_action :check_admin_access
+
   def new
     @user = User.find(params[:user_id])
     @profile = Profile.new
   end
 
   def create
+    byebug
     @profile = Profile.new(strong_params)
     if @profile.save
       redirect_to admin_user_path(params[:profile][:user_id])
@@ -14,6 +17,7 @@ class Admin::ProfilesController < ApplicationController
   end
 
   def edit
+    byebug
     @user = User.find(params[:id])
     @profile = @user.profile
     if @profile == nil
@@ -24,6 +28,9 @@ class Admin::ProfilesController < ApplicationController
   end
 
   def update
+    @profile = Profile.find(params[:id])
+    @profile.update(strong_params)
+    redirect_to @profile.user
   end
 
   def strong_params

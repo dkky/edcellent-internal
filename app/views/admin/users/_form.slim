@@ -1,6 +1,10 @@
   p
     b User Type 
   = f.select :user_access, User.user_accesses.keys, { hide_label: true, prompt: "Select the type" }
+  #english_name_div
+    p
+      b English Name
+    = f.text_field :english_name, hide_label: true, required: true
   #first_name_div
     p
       b First Name
@@ -8,7 +12,7 @@
   #last_name_div
     p
       b Last Name
-    = f.text_field :last_name, hide_label: true, required: true
+    = f.text_field :last_name, hide_label: true, required: true  
   p
     b Email
   = f.text_field :email, hide_label: true, required: true
