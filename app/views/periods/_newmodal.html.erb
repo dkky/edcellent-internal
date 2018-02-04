@@ -42,13 +42,13 @@
       delay: 250,
       data: function (term) {
         return {
-            term: term
+          term: term
         };
       },
       processResults: function (data) {
         var results = [];
         $.each(data, function(index, item){
-          var name = item.first_name + ' ' + item.last_name
+          var name = item.first_name + ' ' + item.last_name + ' (' + item.school + ')'
           results.push({
             id: item.id,
             text: name
