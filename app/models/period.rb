@@ -32,7 +32,7 @@ class Period < ApplicationRecord
   )
 
   pg_search_scope :calendar_search, :associated_against => {
-    :students => [:first_name, :last_name],
+    :students => [:english_name, :first_name, :last_name],
     :tutor => [:first_name, :last_name]
   }
 
