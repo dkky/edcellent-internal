@@ -8,9 +8,12 @@ h2 Create a session
     p    
     = f.text_field :end_time, label: 'What time does it end?', class: 'text-input',id: 'date-end',data: { index: "7"}
   .col-md-6
+    p      
+    = f.text_field :session_number, label: 'Session Number', class: 'text-input'  
+  .col-md-6
     p   
       b Select Subject
-    = f.select :subject, ["EAL","Accounting","Science"], { hide_label: true,prompt: 'Select Subject'}, { id: 'individual_select'}  
+    = f.select :subject, ["VCE - EAL","VCE - Accounting","VCE - Chemistry","VCE - Biology","VCE - Eng", "IB - ENG"], { hide_label: true,prompt: 'Select Subject'}, { id: 'individual_select'}  
   .col-md-6
     p  
     = f.text_field :description, label: 'Description (Optional)', class: 'text-input'
@@ -106,7 +109,7 @@ javascript:
         processResults: function (data) {
           var results = [];
           $.each(data, function(index, item){
-            var name = item.first_name + ' ' + item.last_name
+            var name = item.english_name + ' ' + item.last_name + ' (' + item.school + ')'
             results.push({
               id: item.id,
               text: name
