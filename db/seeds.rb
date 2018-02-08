@@ -48,22 +48,22 @@ require 'csv'
 
 # User.create(first_name: 'KY', last_name: 'Kang',email: 'kai@edcellent.com',password: '12345678', user_access: 2)
 
-puts "populate wynn's students"
+# puts "populate wynn's students"
 
-CSV.foreach('db/w-students.csv', :headers => true) do |row|
-  u = User.new(row.to_hash)
-  u.user_access = 1
-  u.password = 'bangbangda12345678!'
-  u.save
-end
-
-# puts "populate carolyn's students"
-
-# CSV.foreach('db/cz-students.csv', :headers => true) do |row|
+# CSV.foreach('db/w-students.csv', :headers => true) do |row|
 #   u = User.new(row.to_hash)
 #   u.user_access = 1
 #   u.password = 'bangbangda12345678!'
 #   u.save
 # end
+
+puts "populate carolyn's students"
+
+CSV.foreach('db/cz-students.csv', :headers => true) do |row|
+  u = User.new(row.to_hash)
+  u.user_access = 1
+  u.password = 'bangbangda12345678!'
+  u.save
+end
 
 
