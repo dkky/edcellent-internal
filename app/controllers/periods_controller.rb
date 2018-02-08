@@ -179,6 +179,7 @@ class PeriodsController < ApplicationController
 
   def create
     @period = Period.new(periods_params)
+    @period = Period.new(periods_params)
     if current_user.tutor?
       @period.tutor_id = current_user.id
       @period.period_status = 1
@@ -191,15 +192,15 @@ class PeriodsController < ApplicationController
         new_group.user_ids = sanitize_group_params
         user = User.find(*sanitize_group_params)
         if user.class == Array
-          new_group.name = User.find(*sanitize_group_params).pluck(:first_name, :last_name).map {|arr| arr.join(" ") }.join(", ")
+          new_group.name = User.find(*sanitize_group_params).pluck(:english_name, :last_name).map {|arr| arr.join(" ") }.join(", ")
         else 
-          new_group.name = user.first_name + ' ' + user.last_name
+          new_group.name = user.english_name + ' ' + user.last_name
         end
         new_group.save
         @period.group_id = new_group.id
       end
       @period.grouping_list = "1 to " + @period.group.users.count.to_s
-      @period.title = @period.subject + ': ' + @period.group.name + ' - ' + @period.tutor.first_name + ' ' + @period.session_number.to_s
+      @period.title = @period.subject + ': ' + @period.group.name + ' - ' + @period.tutor.english_name + ' ' + @period.session_number.to_s
       if @period.save
         # byebug
     #     render 'periods/create.js.erb' 
@@ -240,16 +241,16 @@ class PeriodsController < ApplicationController
         new_group = Group.new
         new_group.user_ids = sanitize_group_params
         if sanitize_group_params.count > 1
-          new_group.name = user.pluck(:first_name, :last_name).map {|arr| arr.join(" ") }.join(", ")
+          new_group.name = user.pluck(:english_name, :last_name).map {|arr| arr.join(" ") }.join(", ")
         else 
-          new_group.name = user.first_name + user.last_name
+          new_group.name = user.english_name + user.last_name
         end
         new_group.save
       end
       @period.group_id = new_group.id
     end
     @period.grouping_list = "1 to " + @period.group.users.count.to_s
-    @period.title = @period.subject + ': ' + @period.group.name + ' - ' + @period.tutor.first_name
+    @period.title = @period.subject + ': ' + @period.group.name + ' - ' + @period.tutor.english_name
     if @period.save
       # update_event(@period.google_event_id)
       GoogleCalendarJob.perform_later(action: 'update', google_event_id: @period.google_event_id, period_id: @period.id, session: session[:authorization], client_options: client_options)

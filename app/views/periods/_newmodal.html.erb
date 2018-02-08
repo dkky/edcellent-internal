@@ -48,7 +48,7 @@
       processResults: function (data) {
         var results = [];
         $.each(data, function(index, item){
-          var name = item.first_name + ' ' + item.last_name + ' (' + item.school + ')'
+          var name = item.english_name + ' ' + item.last_name + ' (' + item.school + ')'
           results.push({
             id: item.id,
             text: name

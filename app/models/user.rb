@@ -34,7 +34,12 @@ class User < ApplicationRecord
 
   def name
     first_name + ' ' + last_name
+  end  
+
+  def eng_version_name
+    english_name + ' ' + last_name
   end
+
 
   def self.options_for_select_user_access
     user_accesses.keys

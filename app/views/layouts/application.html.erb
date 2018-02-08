@@ -33,7 +33,6 @@
             <% else %>
               <li><a href="/periods/search">My Sessions</a></li>
             <% end %> 
-            <li><a href="#">News</a></li>
             <% if signed_in? %>
               <li>
                 <%= button_to t(".sign_out"), sign_out_path, class: "btn btn-default btn-outline btn-circle", method: :delete %>

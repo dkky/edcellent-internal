@@ -7,7 +7,6 @@ class Admin::ProfilesController < ApplicationController
   end
 
   def create
-    byebug
     @profile = Profile.new(strong_params)
     if @profile.save
       redirect_to admin_user_path(params[:profile][:user_id])
@@ -17,7 +16,6 @@ class Admin::ProfilesController < ApplicationController
   end
 
   def edit
-    byebug
     @user = User.find(params[:id])
     @profile = @user.profile
     if @profile == nil

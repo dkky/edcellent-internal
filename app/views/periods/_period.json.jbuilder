@@ -1,8 +1,8 @@
 json.extract! period, :id, :note, :description
-json.tutor period.tutor.name
+json.tutor period.tutor.eng_version_name
 array = []
 period.group.users.each do |user|
-  array << user.name
+  array << user.eng_version_name
 end
 json.student array.join(", ")
 json.start period.start_time

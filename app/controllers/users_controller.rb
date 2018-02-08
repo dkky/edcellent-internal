@@ -1,7 +1,6 @@
 class UsersController < Clearance::UsersController
 
   def create
-    byebug
     @user = user_from_params
 
     respond_to do |format|
@@ -32,7 +31,7 @@ class UsersController < Clearance::UsersController
 
   # method from the gem 'clearance'
   def user_params
-    params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation)
+    params.require(:user).permit(:english_name, :first_name, :last_name, :email, :password, :password_confirmation)
   end
   
   def user_from_params
