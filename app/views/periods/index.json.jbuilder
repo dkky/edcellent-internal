@@ -16,6 +16,7 @@ json.array!(@periods) do |period|
   json.student array.join(", ")
   json.start period.start_time
   json.end period.end_time
+  json.session_number period.session_number.to_s
   # json.url period_url(period, format: :html)
   json.update_url period_path(period, method: :patch)
   json.edit_url edit_period_path(period)

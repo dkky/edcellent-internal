@@ -71,7 +71,6 @@ initialize_calendar = function() {
         calendar.fullCalendar('unselect');
       },
       eventRender: function(event, element) { 
-        console.log(event)
         element.find(".fc-time").remove();
         element.find('.fc-title').append("<br/>" + moment(event.start).format("HH:mm")  + '-' + moment(event.end).format("HH:mm") + "<br/>"); 
         element.find('.fc-list-item-title').append(event.tutor + 
@@ -88,7 +87,7 @@ initialize_calendar = function() {
           event.tutor + 
           "<br/>" + 
           event.student +
-          "<br/>" 
+          "<br/>" + event.session_number
         ); 
       },
       eventDrop: function(event, delta, revertFunc) {

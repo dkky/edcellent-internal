@@ -233,6 +233,8 @@ class PeriodsController < ApplicationController
 
   def update
     @period.update_attributes(periods_params)
+    @period.grouping_list = "1 to " + @period.group.users.count.to_s
+    @period.title = @period.subject + ': ' + @period.group.name + ' - ' + @period.tutor.english_name
     if sanitize_group_params.count > 0
       user = User.find(*sanitize_group_params)
       if existing_group = Group.joins(:users).where('users.id' => sanitize_group_params).select {|g| g.user_ids == sanitize_group_params}.first
