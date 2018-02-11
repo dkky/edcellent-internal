@@ -15,8 +15,7 @@ h1 Editing Lesson
   = f.text_area :note, label: 'Learning Outcome',rows: '8',class: 'text-input wysihtml5'
   p
     b Your students: 
-    - @period.group.users.each do |user|
-      = user.name
+    = @period.group.users.map {|u| u.eng_version_name } * ", "
   p
     b Change? if no changes, please leave this alone.
   = select_tag "class_type", options_for_select(["yes","no"]), prompt: "Change students"
