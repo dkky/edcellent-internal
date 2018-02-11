@@ -7,6 +7,7 @@ end
 json.student array.join(", ")
 json.start period.start_time
 json.end period.end_time
+json.session_number period.session_number.to_s
 if period.period_status == "done"
   json.color "blue"
   json.icon ''

@@ -145,7 +145,6 @@ class PeriodsController < ApplicationController
 
   def calendar
     @period = Period.new
-    # byebug
     if current_user.admin?
       # if params[:search] 
         # @periods = Period.calendar_search(params[:search])
@@ -178,7 +177,6 @@ class PeriodsController < ApplicationController
   end
 
   def create
-    @period = Period.new(periods_params)
     @period = Period.new(periods_params)
     if current_user.tutor?
       @period.tutor_id = current_user.id

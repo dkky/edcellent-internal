@@ -1,7 +1,6 @@
 $('#f-calendar').fullCalendar('removeEvents', [<%= @period.id %>]);
 $('#f-calendar').fullCalendar(
-  'renderEvent', 
-  <%= raw render(partial: 'periods/period.json.jbuilder', locals: { period: @period }) %>, 
+  'rerenderEvent', 
   true
 );
 $('#edit_event').modal('hide');

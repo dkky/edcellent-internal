@@ -79,6 +79,7 @@ class Period < ApplicationRecord
 
   self.per_page = 10
 
+
   def users_in_group
     # group.users.map {|u| u.name}
     group.users.first.name 
