@@ -177,8 +177,9 @@ class PeriodsController < ApplicationController
   end
 
   def create
+    
     @period = Period.new(periods_params)
-    if current_user.tutor?
+    if current_user.tutor? || current_user.admin?
       @period.tutor_id = current_user.id
       @period.period_status = 1
     end
