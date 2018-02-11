@@ -70,7 +70,12 @@ class Admin::UsersController < ApplicationController
     @user = User.find(params[:id])
     @user.update_attributes(user_params)
     if @user.save
-      redirect_to edit_admin_profile_path(@user)
+      if @user.student?
+        @profile = @user.build_profile
+        redirect_to edit_admin_profile_path(@profile)
+      else
+        redirect_to @user
+      end
     else 
       render 'edit'
     end

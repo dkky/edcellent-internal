@@ -8,27 +8,23 @@ class Admin::ProfilesController < ApplicationController
 
   def create
     @profile = Profile.new(strong_params)
+    @user = User.find(params[:profile][:user])
     if @profile.save
-      redirect_to admin_user_path(params[:profile][:user_id])
+      redirect_to admin_user_path(params[:profile][:user])
     else
       render 'new'
     end
   end
 
   def edit
-    @user = User.find(params[:id])
-    @profile = @user.profile
-    if @profile == nil
-      @profile = @user.build_profile
-    else
-      @profile
-    end
+    @profile = Profile.find(params[:id])
+    @user = @profile.user
   end
 
   def update
     @profile = Profile.find(params[:id])
     @profile.update(strong_params)
-    redirect_to @profile.user
+    redirect_to admin_user_path(@profile.user)
   end
 
   def strong_params

@@ -1,4 +1,4 @@
-= bootstrap_form_for [:admin, @profile] do |f|
+= bootstrap_form_for @profile, url: admin_profile_path(@profile) do |f|
   = render partial: "/admin/profiles/form", locals: {f: f}
-  / = f.hidden_fields :user, @user.id
+  = f.hidden_field :user, value: @user.id
   = f.submit 'Done'
