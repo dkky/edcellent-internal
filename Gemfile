@@ -58,6 +58,7 @@ gem 'simple_form'
 gem 'pg_search'
 gem 'sidekiq'
 gem 'rails_real_favicon'
+gem 'appsignal'
 
 
 
