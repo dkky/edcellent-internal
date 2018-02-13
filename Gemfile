@@ -57,6 +57,8 @@ gem 'simple_form'
 # gem 'progress_bar'
 gem 'pg_search'
 gem 'sidekiq'
+gem 'rails_real_favicon'
+
 
 
 
