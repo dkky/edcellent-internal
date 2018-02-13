@@ -15,9 +15,10 @@
   <thead>
     <tr>
       <th>No.</th>
-      <th>DateTime</th>
+      <th>Date</th>
+      <th>Start Time</th>
+      <th>End Time</th>
       <th>Name</th>
-      <th>Description</th>
       <th></th>
     </tr>
   </thead>
@@ -26,9 +27,10 @@
     <% @periods.order("end_time DESC").each_with_index do |period, i| %>
       <tr id="session_<%= period.id %>">
         <td><%= i + 1 %></td>
-        <td><%= period.start_time.to_formatted_s(:long) %></td>
+        <td><%= period.start_time.strftime("%d/%m/%Y") %></td>
+        <td><%= period.start_time.strftime("%I:%M %p") %></td>
+        <td><%= period.end_time.strftime("%I:%M %p") %></td>
         <td><%= period.title %></td>
-        <td><%= period.description %></td>
         <% if period.incomplete? %>
           <td><%= link_to 'Undo Incomplete', admin_change_period_status_path(period), method: :get, remote: true %></td>
         <% else %>
