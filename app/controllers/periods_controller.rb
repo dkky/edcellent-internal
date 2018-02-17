@@ -233,7 +233,7 @@ class PeriodsController < ApplicationController
   def update
     @period.update_attributes(periods_params)
     @period.grouping_list = "1 to " + @period.group.users.count.to_s
-    @period.title = @period.subject + ': ' + @period.group.name + ' - ' + @period.tutor.english_name
+    @period.title = @period.subject + ': ' + @period.group.name + ' - ' + @period.tutor.english_name + ' ' + @period.session_number.to_s
     if sanitize_group_params.count > 0
       user = User.find(*sanitize_group_params)
       if existing_group = Group.joins(:users).where('users.id' => sanitize_group_params).select {|g| g.user_ids == sanitize_group_params}.first
@@ -251,7 +251,7 @@ class PeriodsController < ApplicationController
       @period.group_id = new_group.id
     end
     @period.grouping_list = "1 to " + @period.group.users.count.to_s
-    @period.title = @period.subject + ': ' + @period.group.name + ' - ' + @period.tutor.english_name
+    @period.title = @period.subject + ': ' + @period.group.name + ' - ' + @period.tutor.english_name + ' ' + @period.session_number.to_s
     if @period.save
       # update_event(@period.google_event_id)
       GoogleCalendarJob.perform_later(action: 'update', google_event_id: @period.google_event_id, period_id: @period.id, session: session[:authorization], client_options: client_options)
