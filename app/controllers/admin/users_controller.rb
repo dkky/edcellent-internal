@@ -21,9 +21,10 @@ class Admin::UsersController < ApplicationController
       #   group_id = group.id
       # end
       # @user.group_ids = group_id  
+      byebug
       if @user.save
         @user.create_profile
-        redirect_to edit_admin_profile_path(id: @user.id)
+        redirect_to edit_admin_profile_path(id: @user.profile.id)
       else
         @user = User.new
         render 'new'
@@ -82,8 +83,13 @@ class Admin::UsersController < ApplicationController
   end
 
   def select2_list_student
-    @users = User.student
-    render json: @users
+    if current_user.admin?
+      @users = User.student
+      render json: @users
+    elsif current_user.tutor?
+      @users = Group.tagged_with(current_user.name).map {|g| g.users }.flatten
+      render json: @users
+    end
   end
 
   private

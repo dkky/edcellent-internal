@@ -17,6 +17,7 @@ class Admin::ProfilesController < ApplicationController
   end
 
   def edit
+    byebug
     @profile = Profile.find(params[:id])
     @user = @profile.user
   end
