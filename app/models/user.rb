@@ -49,6 +49,11 @@ class User < ApplicationRecord
     ['Year 10','Year 11','Year 12','Uni']
   end
 
+  def self.tutor_plus_ck
+    u = User.tutor.to_a << User.find_by(english_name: 'Carlyn')
+    return u.map {|i| [i.name,i.id]}
+  end
+
   # def self.options_for_tagging
   #   ActsAsTaggableOn::Tagging.includes(:tag).where(context: 'groupings').pluck(:name)
   # end

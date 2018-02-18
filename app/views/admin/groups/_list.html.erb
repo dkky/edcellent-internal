@@ -30,7 +30,7 @@
         <td><%= group.name %></td>
         <td><%= group.users.map {|u| u.name} %></td>
         <td>
-          <%= select_tag "tutors", options_for_select(User.tutor.map {|i| [i.name,i.id]}), { hide_label: true,prompt: group.tutor_list , class: 'tutor_for_groups'} %>
+          <%= select_tag "tutors", options_for_select(User.tutor_plus_ck), { hide_label: true,prompt: group.tutor_list , class: 'tutor_for_groups'} %>
         </td>
    </div> 
   <% end %> 
