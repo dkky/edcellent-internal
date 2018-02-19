@@ -293,7 +293,12 @@ class PeriodsController < ApplicationController
     elsif @period.done?
       @period.update(period_status: 1)  
     end
-    update_event(@period.google_event_id)
+    GoogleCalendarJob.perform_later(action: 'update', google_event_id: @period.google_event_id, period_id: @period.id, session: session[:authorization], client_options: client_options)
+    # render "update.js.erb"
+    render "modal_update.js.erb"
+
+    # update_event(@period.google_event_id)
+    # *****need to fix this later!
     # respond_to do |format|
     #   format.html { redirect_to periods_path }
     #   # format.js { render "change_status.js.erb" }
@@ -429,7 +434,7 @@ class PeriodsController < ApplicationController
       result.start.date_time = @period.start_time.in_time_zone(zone).rfc3339
       result.end.date_time = @period.end_time.in_time_zone(zone).rfc3339
       service.update_event('primary', event_id, result)
-      render "update.js.erb"
+      render "modal_update.js.erb"
     rescue Google::Apis::AuthorizationError
       # access token expired after an hour
       response = client.refresh!
