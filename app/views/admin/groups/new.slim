@@ -1,121 +1,74 @@
-h2 Create a session
+h2 Create a group
 
-= bootstrap_form_for @period do |f|
-  .col-md-6
-    p
-    = f.text_field :start_time, label: 'What time does it start?', class: 'text-input',id: 'date-start',data: { index: "7"}
-  .col-md-6
-    p    
-    = f.text_field :end_time, label: 'What time does it end?', class: 'text-input',id: 'date-end',data: { index: "7"}
-  .col-md-6
-    p      
-    = f.text_field :session_number, label: 'Session Number', class: 'text-input'  
-  .col-md-6
-    p   
-      b Select Subject
-    = f.select :subject, ["VCE - EAL","VCE - Accounting","VCE - Chemistry","VCE - Biology","VCE - Eng", "IB - ENG"], { hide_label: true,prompt: 'Select Subject'}, { id: 'individual_select'}  
-  .col-md-6
-    p  
-    = f.text_field :description, label: 'Description (Optional)', class: 'text-input'
-  .col-md-6
-    p  
-      = f.text_area :note, label: 'Learning Outcome (Optional)',rows: '8',class: 'text-input wysihtml5', rows: 10
+= bootstrap_form_for @group, url: admin_groups_path(@group) do |f|
   .col-md-6
     #power-search-random-group-div
       p
         b Select Students
       = select_tag "groups", nil, id: 'power-search-random-group', class: "select-example-3", multiple: true
       br
-      br
-  .col-md-6
-    br
-    p   
-      b Select Tutor
-    = f.select :tutor_id, User.tutor.map {|i| [i.name,i.id]}, { hide_label: true,prompt: 'Select Tutor'}, { id: 'individual_select'}   
-  .col-md-6
-    p
-      b Is the session completed?
-    = f.select :period_status, [{"Incomplete":1}, {"Done": 0}].map {|i| [i.keys[0], i.values[0]]}, { hide_label: true, prompt: 'Status'},{class: 'test',data: { index: "3"}}
     = f.submit 'Done'
 
 
 
 javascript:
 
+  
   $(document).ready(function(){
-    $('.wysihtml5').each(function(i, elem) {
-      $(elem).wysihtml5({
-        toolbar: {
-          "link": true
-        }
-      });
-    });
-    $('[data-wysihtml5-dialog]').on('hidden.bs.modal', function(){
-      $('.modal-backdrop').remove();
-    })
-  })
-
-  $(document).ready(function(){
-    $(".select-example-2").select2({
-      maximumSelectionLength: 1,
-      placeholder: "Select Group",
-      createTag: function (params) {
-        return {
-          id: params.term,
-          text: params.term,
-          newOption: true
-        }
-      },
-      ajax: {
-        url: "/admin/groups",
-        dataType: 'json',
-        delay: 250,
-        data: function (params) {
+      $(".select-example-3").select2({
+        maximumSelectionLength: 10,
+        placeholder: "Select Student",
+        createTag: function (params) {
           return {
-            q: params.term, // search term
-            page: params.page
-          };
+            id: params.term,
+            text: params.term,
+            newOption: false
+          }
         },
-        processResults: function (data, params) {
-          return { results: $.map( data, function(client, i) {
-              var displayResult = client.name 
-                  return { id: client.id, text: displayResult}
-              } ) };          
-        }
+        ajax: {
+          url: "/admin/users/select2_list_student.json",
+          dataType: 'json',
+          delay: 250,
+          data: function (term) {
+            return {
+                term: term
+            };
+          },
+          processResults: function (data) {
+            var results = [];
+            $.each(data, function(index, item){
+              var name = item.english_name + ' ' + item.last_name + ' (' + item.school + ')'
+              results.push({
+                id: item.id,
+                text: name
+              });
+            });
+            return {
+                results: results
+            };
+          }
+          // processResults: function (data, params) {
+          //   // return { results: $.map( data, function(client, i) {
+          //   //     var displayResult = client.first_name + ' ' + client.last_name 
+          //   //         return { id: client.id, text: displayResult}
+          //   //     } ) }; 
+          //   console.log(data.matches)
+          //   return { 
+          //     // Select2 requires an id, so we need to map the results and add an ID
+          //     // You could instead include an id in the tsv you add to soulheart ;)
+          //     results: data.matches.map(function(item) {
+          //       //var textToDisplay = item.category + ": " + item.text
+          //       return {
+          //         id: item.id,
+          //         text: item.first_name
+          //       };
+          //     }),
+          //     pagination: {
+          //       // If there are 10 matches, there's at least another page
+          //       more: data.matches.length === 10
+          //     }
+          //   };         
+          // }
       },
     });
   });
-  
-  $(document).ready(function(){
-    $(".select-example-3").select2({
-      maximumSelectionLength: 10,
-      placeholder: "Select Student",
-      createTag: function (params) {
-        return {
-          id: params.term,
-          text: params.term,
-          newOption: false
-        }
-      },
-      ajax: {
-        url: "/admin/users/select2_list_student.json",
-        dataType: 'json',
-        delay: 250,
-        data: function (term) {
-          return {
-              term: term
-          };
-        },
-        processResults: function (data) {
-          var results = [];
-          $.each(data, function(index, item){
-            var name = item.english_name + ' ' + item.last_name + ' (' + item.school + ')'
-            results.push({
-              id: item.id,
-              text: name
-            });
-          });
-          return {
-              results: results
-          };
-        }

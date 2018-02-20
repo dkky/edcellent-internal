@@ -51,7 +51,8 @@ class User < ApplicationRecord
 
   def self.tutor_plus_ck
     u = User.tutor.to_a << User.find_by(english_name: 'Carlyn')
-    return u.map {|i| [i.name,i.id]}
+    # u = User.tutor.to_a 
+    return u.map {|i| [i.eng_version_name,i.id]}
   end
 
   # def self.options_for_tagging
