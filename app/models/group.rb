@@ -28,7 +28,11 @@ class Group < ApplicationRecord
 
 
   scope :with_different_tutor, lambda {|tutor|
-    tagged_with(tutor)
+    unless tagged_with(tutor)
+      return []
+    else 
+      tagged_with(tutor)
+    end
   }
 
   def self.options_for_grouping
@@ -37,6 +41,10 @@ class Group < ApplicationRecord
   end
 
   def self.options_for_tutor
-    ActsAsTaggableOn::Tagging.includes(:tag).where(context: 'tutors').pluck(:name).uniq
+    unless ActsAsTaggableOn::Tagging.includes(:tag).where(context: 'tutors').pluck(:name).uniq
+      return User.all.map {|u| u.eng_version_name}
+    else 
+      return ActsAsTaggableOn::Tagging.includes(:tag).where(context: 'tutors').pluck(:name).uniq    
+    end
   end
 end

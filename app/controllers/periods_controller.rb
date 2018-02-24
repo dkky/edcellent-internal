@@ -255,7 +255,7 @@ class PeriodsController < ApplicationController
     if @period.save
       # update_event(@period.google_event_id)
       GoogleCalendarJob.perform_later(action: 'update', google_event_id: @period.google_event_id, period_id: @period.id, session: session[:authorization], client_options: client_options)
-      render "update.js.erb"
+      render "modal_update.js.erb"
     else
       render 'edit.js.erb'
     end
