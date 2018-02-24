@@ -11,7 +11,7 @@ class Admin::UsersController < ApplicationController
   def create
     if user_params["user_access"] == "student"
       @user = User.new(user_params)
-      @user.password = "123456"
+      @user.password = "bangbangda123456"
       # if group_params[:groups].is_i?
       #   # if it is a number, that means it exists in the database already
       #   group_id = group_params[:groups]
@@ -21,7 +21,6 @@ class Admin::UsersController < ApplicationController
       #   group_id = group.id
       # end
       # @user.group_ids = group_id  
-      byebug
       if @user.save
         @user.create_profile
         redirect_to edit_admin_profile_path(id: @user.profile.id)
