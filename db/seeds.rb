@@ -73,7 +73,7 @@ require 'csv'
 # end
 num = 0
 
-CSV.foreach('db/students.csv', :headers => true) do |row|
+CSV.foreach('db/student-enrolment-2nd.csv', :headers => true) do |row|
   u = User.new(row.to_hash)
   u.user_access = 1
   u.password = 'bangbangda12345678!'
