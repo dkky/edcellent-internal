@@ -9,6 +9,7 @@
 table.table
   tr
     th Type
+    th Name
     th Email
     th Year Level
     th School
@@ -17,6 +18,7 @@ table.table
   - users.each do |user|
     tr.student
       td.type = user.user_access
+      td.name = user.eng_version_name
       td.email = user.email
       td.country = user.year_level
       td.public_review = user.school
