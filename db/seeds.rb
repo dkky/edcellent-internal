@@ -75,10 +75,10 @@ num = 0
 
 CSV.foreach('db/student-enrolment-2nd.csv', :headers => true) do |row|
   u = User.new(row.to_hash)
-  u.user_access = 1
-  u.password = 'bangbangda12345678!'
-  u.phone_number = "0" + u.phone_number
   unless User.find_by(email: u.email)
+    u.user_access = 1
+    u.password = 'bangbangda12345678!'
+    u.phone_number = "0" + u.phone_number
     if u.save
       puts "#{u.english_name} is saved!"
       num += 1
