@@ -7,13 +7,14 @@ h2 Create a group
         b Select Students
       = select_tag "groups", nil, id: 'power-search-random-group', class: "select-example-3", multiple: true
       br
+      br
+
     = f.submit 'Done'
 
 
 
 javascript:
 
-  
   $(document).ready(function(){
       $(".select-example-3").select2({
         maximumSelectionLength: 10,
@@ -72,3 +73,5 @@ javascript:
       },
     });
   });
+
+

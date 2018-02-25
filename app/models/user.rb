@@ -1,5 +1,7 @@
 class User < ApplicationRecord
   include Clearance::User
+  include PgSearch
+
   # acts_as_taggable # Alias for acts_as_taggable_on :tags
   # acts_as_taggable_on :groupings
   has_many :user_groups
@@ -29,6 +31,11 @@ class User < ApplicationRecord
   # scope :with_different_grouping, lambda {|grouping|
   #   tagged_with(grouping)
   # }
+  pg_search_scope :search_name,
+                :against => :english_name,
+                :using => {
+                  :tsearch => {:prefix => true}
+                }
 
   self.per_page = 10
 

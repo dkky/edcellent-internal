@@ -83,12 +83,20 @@ class Admin::UsersController < ApplicationController
 
   def select2_list_student
     if current_user.admin?
-      @users = User.student
-      render json: @users
+      if params[:term][:term]
+        @users = User.search_name(params[:term][:term]).where(user_access: 1)
+      else
+        @users = User.student
+      end
     elsif current_user.tutor?
-      @users = Group.tagged_with(current_user.name).map {|g| g.users }.flatten
-      render json: @users
+      if params[:term][:term]
+        user_ids = User.search_name(params[:term][:term]).where(user_access: 1).pluck(:id) & Group.tagged_with(current_user.name).map {|g| g.users }.flatten.pluck(:id)
+        @users = User.find(user_ids)
+      else
+        @users = Group.tagged_with(current_user.name).map {|g| g.users }.flatten
+      end
     end
+    render json: @users  
   end
 
   private

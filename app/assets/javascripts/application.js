@@ -23,6 +23,8 @@
 //= require bootstrap-wysihtml5
 //= require bootstrap-datepicker
 //= require select2
+//= require select2-full
+
 
 // $modal.on('hidden', function () {
 //   $('.modal-backdrop').remove();
