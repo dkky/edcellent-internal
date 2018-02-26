@@ -12,7 +12,8 @@ class Admin::PeriodsController < ApplicationController
           select_options: {
             with_different_status: Period.options_for_different_status,
             with_different_group: Period.options_for_different_group_admin,
-            with_different_grouping: Period.options_for_tagging 
+            with_different_grouping: Period.options_for_tagging,
+            sorted_by: Period.options_for_sorted_by
           },
         ) or return
         @periods = @filterrific.find.page(params[:page])
@@ -29,7 +30,8 @@ class Admin::PeriodsController < ApplicationController
           select_options: {
             with_different_status: Period.options_for_different_status,
             with_different_group: Period.options_for_different_group_admin,
-            with_different_grouping: Period.options_for_tagging 
+            with_different_grouping: Period.options_for_tagging,
+            sorted_by: Period.options_for_sorted_by
           },
         ) or return
         @periods = @filterrific.find.page(params[:page])
@@ -46,7 +48,8 @@ class Admin::PeriodsController < ApplicationController
         select_options: {
           with_different_status: Period.options_for_different_status,
           with_different_group: Period.options_for_different_group_admin,
-          with_different_grouping: Period.options_for_tagging 
+          with_different_grouping: Period.options_for_tagging,
+          sorted_by: Period.options_for_sorted_by
         },
       ) or return
       @periods = @filterrific.find.page(params[:page])

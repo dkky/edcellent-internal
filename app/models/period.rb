@@ -27,7 +27,8 @@ class Period < ApplicationRecord
       :with_different_group,
       :with_different_grouping,
       :with_start_date,
-      :with_end_date
+      :with_end_date,
+      :sorted_by
     ]
   )
 
@@ -77,6 +78,18 @@ class Period < ApplicationRecord
     where('periods.end_time <= ?', ref_date)
   }
 
+  scope :sorted_by, lambda { |sort_option|
+    # extract the sort direction from the param value.
+    direction = (sort_option =~ /desc$/) ? 'desc' : 'asc'
+    case sort_option.to_s
+    when /^created_at_/
+      order("end_time #{ direction }")
+    else
+      raise(ArgumentError, "Invalid sort option: #{ sort_option.inspect }")
+    end
+  }
+
+
   self.per_page = 10
 
 
@@ -109,6 +122,12 @@ class Period < ApplicationRecord
     ActsAsTaggableOn::Tagging.includes(:tag).where(context: 'groupings').pluck(:name).uniq
   end
 
+  def self.options_for_sorted_by
+    [
+      ['Session date (newest first)', 'created_at_desc'],
+      ['Session date (oldest first)', 'created_at_asc'],
+    ]
+  end
   # def self.search(search)
   #   if search
   #     tutor = User.where("first_name LIKE ?", "%#{search}%").first

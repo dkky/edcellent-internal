@@ -24,7 +24,7 @@
   </thead>
   <tbody>
   <div id="all_sessions">
-    <% @periods.order("end_time DESC").each_with_index do |period, i| %>
+    <% @periods.each_with_index do |period, i| %>
       <tr id="session_<%= period.id %>">
         <td><%= i + 1 %></td>
         <td><%= period.start_time.strftime("%d/%m/%Y") %></td>

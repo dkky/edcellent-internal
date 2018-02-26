@@ -38,6 +38,17 @@
           %>
         </div>
       </div>
+
+      <div class="col-md-2">
+        <div class="form-group chardin_box" data-position='top'>               
+          <label> Sort By </label>
+          <%= f.select :sorted_by,
+                     @filterrific.select_options[:sorted_by],
+                     { include_blank: '- Any -' }, 
+                     { class: 'form-control' }     
+          %>
+        </div>
+      </div>
       <div class="col-md-2">
         <div class="form-group chardin_box" data-position='top'>               
           <label> From </label>
