@@ -60,6 +60,7 @@ gem 'sidekiq'
 gem 'rails_real_favicon'
 gem 'appsignal'
 
+gem 'unirest'
 
 
 
