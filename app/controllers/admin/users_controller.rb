@@ -93,7 +93,7 @@ class Admin::UsersController < ApplicationController
         user_ids = User.search_name(params[:term][:term]).where(user_access: 1).pluck(:id) & Group.tagged_with(current_user.eng_version_name).map {|g| g.users }.flatten.pluck(:id)
         @users = User.find(user_ids)
       else
-        @users = Group.tagged_with(current_user.name).map {|g| g.users }.flatten
+        @users = Group.tagged_with(current_user.eng_version_name).map {|g| g.users }.flatten
       end
     end
     render json: @users  
