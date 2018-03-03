@@ -67,7 +67,7 @@ class Admin::GroupsController < ApplicationController
     tutor_id = params[:tutor_id].to_i
     @group = Group.find(id)
     @tutor = User.find(tutor_id)
-    @group.tutor_list << @tutor.name
+    @group.tutor_list << @tutor.eng_version_name
     if @group.save
       respond_to do |format|
         format.html 
