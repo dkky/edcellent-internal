@@ -45,6 +45,8 @@ initialize_calendar = function() {
   $('#f-calendar').each(function(){
     var calendar = $(this);
     calendar.fullCalendar({
+      minTime: "07:00:00",
+      maxTime: "22:30:00",
       buttonText: {
         listWeek: 'list - week',
         listDay: 'list - day',
