@@ -1,5 +1,7 @@
 class Admin::GroupsController < ApplicationController
   before_action :check_admin_access
+  before_action :check_admin_access, except: [:select2_list_groups]
+
 
   respond_to :html, :json
   layout :determine_layout, only: [:index]
@@ -82,6 +84,14 @@ class Admin::GroupsController < ApplicationController
 
   def determine_layout
     current_user.admin? ? "admin" : "application"
+  end
+
+  def select2_list_groups
+    if params[:term][:term]
+      @users = User.search_name(params[:term][:term]).where(user_access: 1)
+    else
+      @users = User.student
+    end
   end
 
   def sanitize_group_params

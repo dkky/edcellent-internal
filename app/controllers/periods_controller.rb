@@ -226,6 +226,15 @@ class PeriodsController < ApplicationController
     @period.update_attributes(periods_params)
     # update_event(@period.google_event_id)
     GoogleCalendarJob.perform_later(action: 'update', google_event_id: @period.google_event_id, period_id: @period.id, session: session[:authorization], client_options: client_options)
+    if Rails.env.production? && @period.done?
+      session_date = @period.start_time.strftime("%d/%-m %a")
+      session_desc = @period.group.users.pluck(:english_name).join(", ") + ' ' + @period.session_number.to_s
+      session_time = @period.start_time.strftime("%-I:%M%p") + " - " + @period.end_time.strftime("%-I:%M %p")
+      session_tutor = @period.tutor.english_name
+      session_updated_at = @period.updated_at.to_s
+      zap = ENV['zapier_backup_call'] + "?date=#{session_date}&time=#{session_time}&tutor=#{session_tutor}&session=#{session_desc}&updated_at=#{session_updated_at}"
+      resp = Unirest.get(zap)
+    end
     render "update.js.erb"
   end
 
