@@ -64,11 +64,18 @@
             page: params.page
           };
         },
-        processResults: function (data, params) {
-          return { results: $.map( data, function(client, i) {
-              var displayResult = client.first_name + ' ' + client.last_name 
-                  return { id: client.id, text: displayResult}
-              } ) };          
+        processResults: function (data) {
+          var results = [];
+          $.each(data, function(index, item){
+            var name = item.english_name + ' ' + item.last_name + ' (' + item.school + ')'
+            results.push({
+              id: item.id,
+              text: name
+            });
+          });
+          return {
+              results: results
+          };
         }
       },
     });

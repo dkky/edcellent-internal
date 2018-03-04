@@ -89,7 +89,7 @@ class Admin::UsersController < ApplicationController
         @users = User.student
       end
     elsif current_user.tutor?
-      if params[:term][:term]
+      if params[:term] && params[:term][:term]
         user_ids = User.search_name(params[:term][:term]).where(user_access: 1).pluck(:id) & Group.tagged_with(current_user.eng_version_name).map {|g| g.users }.flatten.pluck(:id)
         @users = User.find(user_ids)
       else
