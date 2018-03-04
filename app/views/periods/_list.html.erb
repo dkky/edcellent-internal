@@ -31,16 +31,16 @@
         <td><%= period.start_time.strftime("%I:%M %p") %></td>
         <td><%= period.end_time.strftime("%I:%M %p") %></td>
         <td><%= period.title %></td>
-          <td class="icon-padding"><%= link_to edit_period_path(period) do %><i class="fa fa-pencil-square-o"></i><% end %></td>
         <% if current_user.admin? %>
-        <% if period.incomplete? %>
-          <td><%= link_to 'Undo Incomplete', admin_change_period_status_path(period), method: :get, remote: true %></td>
-        <% else %>
-          <td><%= link_to 'Undo Done', admin_change_period_status_path(period), method: :get, remote: true %></td>
-        <% end %>
-          <td class="icon-padding"><%= link_to period do %><i class="fa fa-eye"></i><% end %></td>
-          <td class="icon-padding"><%= link_to duplicate_session_path(period) do %><i class="fa fa-clone"></i><% end %></td>
-          <td class="icon-padding"><%= link_to admin_period_path(period), method: :delete, data: { confirm: 'Are you sure?' }, remote: true do %><i class="fa fa-trash-o"></i><% end %></td>
+            <td class="icon-padding"><%= link_to edit_period_path(period) do %><i class="fa fa-pencil-square-o"></i><% end %></td>
+          <% if period.incomplete? %>
+            <td><%= link_to 'Undo Incomplete', admin_change_period_status_path(period), method: :get, remote: true %></td>
+          <% else %>
+            <td><%= link_to 'Undo Done', admin_change_period_status_path(period), method: :get, remote: true %></td>
+          <% end %>
+            <td class="icon-padding"><%= link_to period do %><i class="fa fa-eye"></i><% end %></td>
+            <td class="icon-padding"><%= link_to duplicate_session_path(period) do %><i class="fa fa-clone"></i><% end %></td>
+            <td class="icon-padding"><%= link_to admin_period_path(period), method: :delete, data: { confirm: 'Are you sure?' }, remote: true do %><i class="fa fa-trash-o"></i><% end %></td>
         <% end %>
       </tr>
    </div> 

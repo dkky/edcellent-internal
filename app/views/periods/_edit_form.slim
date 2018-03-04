@@ -16,7 +16,7 @@ h1 Editing Lesson
   p
     b Your students: 
     = @period.group.users.map {|u| u.eng_version_name } * ", "
-  p
+  adi
     b Change? if no changes, please leave this alone.
   = select_tag "class_type", options_for_select(["yes","no"]), prompt: "Change students"
   br

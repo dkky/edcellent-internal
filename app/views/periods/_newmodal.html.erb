@@ -4,7 +4,14 @@
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h4 class="modal-title">Create New Event</h4>
+        <div id="flash">
+          <% flash.each do |key, value| -%>
+            <div id="flash_<%= key %>"><%=h value %></div>
+          <% end %>
+        </div>
       </div>
+
+    
       <div class="modal-body">
         <%= render 'form', period: @period %>
       </div>

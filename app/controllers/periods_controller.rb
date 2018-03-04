@@ -176,8 +176,7 @@ class PeriodsController < ApplicationController
     end
   end
 
-  def create
-    
+  def create  
     @period = Period.new(periods_params)
     if current_user.tutor? || current_user.admin?
       @period.tutor_id = current_user.id
@@ -282,7 +281,14 @@ class PeriodsController < ApplicationController
   def duplicate
     @source = Period.find(params[:format])
     @period = @source.dup
-    flash.now[:notice] = "This is a duplicate. Please update the info and save"
+    # if @period.save
+    #   flash[:notice] = "This is a duplicate. Please update the info and save"
+    #   redirect_to edit_period_path(@period)
+    # else
+    #   flash[:notice] = "failed to duplicate"
+    #   redirect_to root_path
+    # end
+    flash.now[:warning] = "This is a duplicate. Please update the info and save"
     render 'newmodal.js.erb'
   end
 
@@ -297,7 +303,7 @@ class PeriodsController < ApplicationController
     # render "update.js.erb"
     if Rails.env.production? && @period.done?
       session_date = @period.start_time.strftime("%d/%-m %a")
-      session_desc = @period.group.users.pluck(:english_name).join(", ") + @period.session_number.to_s
+      session_desc = @period.group.users.pluck(:english_name).join(", ") + ' ' + @period.session_number.to_s
       session_time = @period.start_time.strftime("%-I:%M%p") + " - " + @period.end_time.strftime("%-I:%M %p")
       session_tutor = @period.tutor.english_name
       session_updated_at = @period.updated_at.to_s

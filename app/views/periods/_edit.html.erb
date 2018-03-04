@@ -8,6 +8,11 @@
       <div class="modal-body">
         <%= render 'edit_form', period: @period %>
       </div>
+      <div id="flash">
+        <% flash.each do |key, value| -%>
+          <div id="flash_<%= key %>"><%=h value %></div>
+        <% end %>
+      </div>
     </div>
   </div>
 </div>
