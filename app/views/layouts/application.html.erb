@@ -60,11 +60,8 @@
 <body>
    
 
-  <div id="flash">
-    <% flash.each do |key, value| -%>
-      <div id="flash_<%= key %>"><%=h value %></div>
-    <% end %>
-  </div>
+  <%= render 'layouts/flash_message' %>
+
   <div class="container">
     <%= yield %>
     <div id='remote_container'></div>
