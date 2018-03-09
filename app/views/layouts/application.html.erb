@@ -32,7 +32,7 @@
               <li><a href="/periods/search">All Sessions</a></li>
               <li><a href="/admin/users">Users</a></li>
               <li><a href="/admin/groups">Groups</a></li>
-            <% else %>
+            <% elsif current_user.tutor? %>
               <li><a href="/periods/search">My Sessions</a></li>
             <% end %> 
             <% if signed_in? %>
