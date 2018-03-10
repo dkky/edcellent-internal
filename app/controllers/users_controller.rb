@@ -4,9 +4,12 @@ class UsersController < Clearance::UsersController
     if params[:user][:access] == 'student'
       @user = User.new(student_params)
       @user.password = 'bangbangda123'
-      @user.save
-      flash[:notice] = "Thank you #{@user.english_name}!"
-      redirect_to student_profile_path
+      if @user.save      
+        flash[:notice] = "Thank you #{@user.english_name}!"
+        redirect_to student_profile_path
+      else
+        render "users/student"
+      end
     else
       @user = user_from_params
 
