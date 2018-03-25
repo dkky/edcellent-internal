@@ -88,10 +88,10 @@ class GoogleCalendarJob < ApplicationJob
           # date_time: '2015-09-28T21:00:00',
           # time_zone: 'Australia/Melbourne',
         },
-        # attendees: [
-        #   {email: 'lpage@example.com'},
-        #   {email: 'sbrin@example.com'},
-        # ],
+        attendees: [
+          {email: 'kai@edcellent.com'},
+          {email: 'ericw@edcellent.com'},
+        ],
         # include it next time *********
       })
       result = service.insert_event(@period.tutor.email, event)
