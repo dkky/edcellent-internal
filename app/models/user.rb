@@ -53,7 +53,7 @@ class User < ApplicationRecord
   end
 
   def self.options_for_year_level
-    ['Year 3','Year 10','Year 11','Year 12','Uni']
+    ['Year 3','Year 7','Year 10','Year 11','Year 12','Uni']
   end
 
   def self.tutor_plus_ck
