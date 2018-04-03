@@ -10,7 +10,7 @@ class User < ApplicationRecord
   has_many :attending_periods, through: :groups, source: :periods
   # belongs_to :group, optional: true
   has_one :profile
-  enum user_access: [:superadmin, :admin, :student, :tutor, :alumni, :dropout]
+  enum user_access: [:admin, :student, :tutor, :superadmin, :alumni, :dropout]
 
   filterrific(
     default_setting: { sorted_by: 'created_at_desc' },
