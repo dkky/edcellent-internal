@@ -9,19 +9,23 @@ p
 
 = link_to 'Edit', edit_admin_user_path(@user)
 
-p
-  strong Text Response:
-  = @user.profile.text_response
+- if @user.student? || @user.dropout? || @user.alumni?
+  p
+    strong Text Response:
+    - unless @user.profile.nil?
+      = @user.profile.text_response 
 
-p
-  strong Comparative 1:
-  = @user.profile.comparative_1
+  p
+    strong Comparative 1:
+    - unless @user.profile.nil?
+      = @user.profile.comparative_1 unless @user.profile
 
-p
-  strong Comparative 2:
-  = @user.profile.comparative_2
+  p
+    strong Comparative 2:
+    - unless @user.profile.nil?
+      = @user.profile.comparative_2 unless @user.profile
 
-= link_to 'Edit', edit_admin_profile_path(@user)
+= link_to 'Edit', edit_admin_profile_path(@user.profile.id)
 
 
 

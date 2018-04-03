@@ -40,6 +40,11 @@ class UsersController < Clearance::UsersController
     @user = User.new
   end
 
+  def show
+    byebug
+    @user = User.find(params[:id])
+  end
+
   private
 
   # method from the gem 'clearance'

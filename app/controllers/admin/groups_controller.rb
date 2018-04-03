@@ -83,7 +83,7 @@ class Admin::GroupsController < ApplicationController
   private
 
   def determine_layout
-    current_user.admin? ? "admin" : "application"
+    current_user.admin? || current_user.superadmin? ? "admin" : "application"
   end
 
   def select2_list_groups

@@ -21,6 +21,7 @@ class Admin::UsersController < ApplicationController
       #   group_id = group.id
       # end
       # @user.group_ids = group_id  
+      byebug
       if @user.save
         @user.create_profile
         redirect_to edit_admin_profile_path(id: @user.profile.id)
@@ -67,14 +68,19 @@ class Admin::UsersController < ApplicationController
   end
 
   def update
+    byebug
     @user = User.find(params[:id])
     @user.update_attributes(user_params)
     if @user.save
-      if @user.student?
-        @profile = @user.build_profile
+      if @user.student? || @user.dropout? || @user.alumni?
+        if @user.profile.nil?
+          @profile = @user.build_profile
+        else
+          @profile = @user.profile
+        end
         redirect_to edit_admin_profile_path(@profile)
       else
-        redirect_to @user
+        redirect_to admin_user_path(@user)
       end
     else 
       render 'edit'
@@ -82,7 +88,7 @@ class Admin::UsersController < ApplicationController
   end
 
   def select2_list_student
-    if current_user.admin?
+    if current_user.admin? || current_user.superadmin?
       if params[:term][:term]
         @users = User.search_name(params[:term][:term]).where(user_access: 1)
       else

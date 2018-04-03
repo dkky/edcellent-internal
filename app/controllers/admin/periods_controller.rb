@@ -3,7 +3,7 @@ class Admin::PeriodsController < ApplicationController
   layout :determine_layout, only: [:index]
 
   def index
-    if params[:search] && current_user.admin?
+    if (params[:search] && current_user.admin? || params[:search] && current_user.superadmin?) 
       @periods = Period.calendar_search(params[:search])
       if @periods.count > 0
         @filterrific = initialize_filterrific(
@@ -117,6 +117,6 @@ class Admin::PeriodsController < ApplicationController
   end
 
   def determine_layout
-    current_user.admin? ? "admin" : "application"
+    current_user.admin? || current_user.superadmin? ? "admin" : "application"
   end
 end

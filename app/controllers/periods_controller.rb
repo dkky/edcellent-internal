@@ -18,7 +18,7 @@ class PeriodsController < ApplicationController
   end
 
   def search
-    if current_user.admin?
+    if current_user.admin? || current_user.superadmin?
       @periods = Period.all
     elsif current_user.tutor?
       @periods = current_user.periods
@@ -26,7 +26,7 @@ class PeriodsController < ApplicationController
       @periods = current_user.group.periods
     end
 
-    if current_user.admin?
+    if current_user.admin? || current_user.superadmin?
       @filterrific = initialize_filterrific(
         Period,
         params[:filterrific],
@@ -61,7 +61,7 @@ class PeriodsController < ApplicationController
 
 # change this whole thing........it's a mess
   def index
-    if current_user.admin?
+    if current_user.admin? || current_user.superadmin?
       @periods = Period.all
     elsif current_user.tutor?
       @periods = current_user.periods
@@ -71,7 +71,7 @@ class PeriodsController < ApplicationController
   end
 
   def calendar_search
-    if params[:search] && current_user.admin?
+    if params[:search] && current_user.admin? || params[:search] && current_user.superadmin?
       @periods = Period.calendar_search(params[:search])
       if @periods.count > 0
         @filterrific = initialize_filterrific(
@@ -145,7 +145,7 @@ class PeriodsController < ApplicationController
 
   def calendar
     @period = Period.new
-    if current_user.admin?
+    if current_user.admin? || current_user.superadmin?
       # if params[:search] 
         # @periods = Period.calendar_search(params[:search])
         # @periods = Period.search { fulltext params[:search] }.results
@@ -178,7 +178,7 @@ class PeriodsController < ApplicationController
 
   def create  
     @period = Period.new(periods_params)
-    if current_user.tutor? || current_user.admin?
+    if current_user.tutor? || current_user.admin? || current_user.superadmin?
       @period.tutor_id = current_user.id
       @period.period_status = 1
     end

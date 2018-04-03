@@ -10,7 +10,9 @@ class ApplicationController < ActionController::Base
   end
 
   def check_admin_access
-    redirect_to root_path unless current_user && current_user.admin?
+    unless (current_user && current_user.admin? || current_user && current_user.superadmin?)
+      redirect_to root_path 
+    end
   end
 
   def check_access

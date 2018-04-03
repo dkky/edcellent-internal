@@ -3,7 +3,7 @@
 <% end %>
 <br>
 <br>
-<% if current_user.admin? %>
+<% if current_user.admin? || current_user.superadmin? %>
   <div class="row">
     <%= form_tag(admin_periods_path, :method => "get", id: "search-form") do %>
           <div class="col-md-6">

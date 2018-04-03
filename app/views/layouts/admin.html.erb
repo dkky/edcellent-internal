@@ -27,7 +27,7 @@
           <!-- Collect the nav links, forms, and other content for toggling -->
           <div class="collapse navbar-collapse" id="navbar-collapse-2">
             <ul class="nav navbar-nav navbar-right">
-              <% if current_user && current_user.admin? %>
+              <% if (current_user && current_user.admin? || current_user && current_user.superadmin? ) %>
                 <li><a href="/admin/periods">Sessions (Admin)</a></li>
                 <li><a href="/periods/search">All Sessions</a></li>
                 <li><a href="/admin/users">Users</a></li>
