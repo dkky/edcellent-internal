@@ -69,7 +69,6 @@ class Admin::UsersController < ApplicationController
   def update
     @user = User.find(params[:id])
     @user.update_attributes(user_params)
-    byebug
     if @user.save
       if @user.student? || @user.dropout? || @user.alumni? || @user.trial?
         if @user.profile.nil?
