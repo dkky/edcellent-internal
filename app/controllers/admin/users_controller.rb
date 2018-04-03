@@ -21,7 +21,6 @@ class Admin::UsersController < ApplicationController
       #   group_id = group.id
       # end
       # @user.group_ids = group_id  
-      byebug
       if @user.save
         @user.create_profile
         redirect_to edit_admin_profile_path(id: @user.profile.id)
@@ -68,7 +67,6 @@ class Admin::UsersController < ApplicationController
   end
 
   def update
-    byebug
     @user = User.find(params[:id])
     @user.update_attributes(user_params)
     if @user.save
