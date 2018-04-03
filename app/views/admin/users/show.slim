@@ -9,7 +9,7 @@ p
 
 = link_to 'Edit', edit_admin_user_path(@user)
 
-- if @user.student? || @user.dropout? || @user.alumni?
+- if @user.student? || @user.dropout? || @user.alumni? || @user.trial?
   p
     strong Text Response:
     - unless @user.profile.nil?
