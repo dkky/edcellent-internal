@@ -62,6 +62,8 @@ gem 'rails_real_favicon'
 gem 'appsignal'
 
 gem 'unirest'
+gem 'slack-ruby-client'
+
 
 
 

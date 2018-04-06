@@ -1,6 +1,8 @@
 class Period < ApplicationRecord
   include PgSearch
 
+  # after_save :check_session_number
+
   belongs_to :tutor, class_name: "User", foreign_key: :tutor_id
   belongs_to :group
   has_many :user_groups, through: :group
@@ -128,6 +130,18 @@ class Period < ApplicationRecord
       ['Session date (oldest first)', 'created_at_asc'],
     ]
   end
+
+  def check_session_number
+    # byebug
+    if self.session_number.to_s == "9.0" || self.session_number.to_s == "10.0"
+      session = self.title
+      date =  self.start_time.strftime("%d/%-m %a")
+      time = self.start_time.strftime("%-I:%M%p") + " - " + self.end_time.strftime("%-I:%M %p")
+      message = "\n@channel\n```\n\n\ #{session} \n #{date} \n #{time} \n is it time to collect fees? \n if yes, please add the students to the respective sales sheet```"
+      SlackJob.perform_later(message: message, random: '')
+    end
+  end
+
   # def self.search(search)
   #   if search
   #     tutor = User.where("first_name LIKE ?", "%#{search}%").first

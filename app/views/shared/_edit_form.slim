@@ -6,7 +6,7 @@ h1 Editing Lesson
   = f.text_field :end_time, label: 'What time does it end?', class: 'text-input',id: 'date-end',data: { index: "7"}
   p   
     b Select Subject
-  = f.select :subject,["VCE - EAL","VCE - Accounting","VCE - Chemistry","VCE - Biology","VCE - Eng", "IB - ENG", "Uni - English"], { hide_label: true,prompt: 'Select Subject'}, { id: 'individual_select'}  
+  = f.select :subject,["VCE - EAL","VCE - Accounting","VCE - Chemistry","VCE - Biology","VCE - Eng", "IB - ENG", "Uni - English", "IB - Maths"], { hide_label: true,prompt: 'Select Subject'}, { id: 'individual_select'}  
   p  
   = f.text_field :description, label: 'Description (Optional)', class: 'text-input'
   p  
