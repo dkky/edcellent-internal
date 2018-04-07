@@ -27,6 +27,7 @@ class Period < ApplicationRecord
     available_filters: [
       :with_different_status,
       :with_different_group,
+      :with_different_tutor,
       :with_different_grouping,
       :with_start_date,
       :with_end_date,
@@ -66,6 +67,10 @@ class Period < ApplicationRecord
 
   scope :with_different_group, lambda { |group|
     where(group_id: group)
+  }  
+
+  scope :with_different_tutor, lambda { |tutor|
+    where(tutor_id: tutor)
   }
 
   scope :with_different_grouping, lambda {|grouping|
@@ -114,6 +119,10 @@ class Period < ApplicationRecord
 
   def self.options_for_different_group_admin
     Period.all.map {|period| [period.group.name,period.group.id]}.uniq
+  end    
+
+  def self.options_for_different_tutor_admin
+    Period.all.map {|period| [period.tutor.eng_version_name,period.tutor_id]}.uniq
   end  
 
   def self.options_for_different_group_based_on_tutors(tutor)
