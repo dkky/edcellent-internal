@@ -138,7 +138,8 @@ class Period < ApplicationRecord
       date =  self.start_time.strftime("%d/%-m %a")
       time = self.start_time.strftime("%-I:%M%p") + " - " + self.end_time.strftime("%-I:%M %p")
       message = "\n@channel\n```\n\n\ #{session} \n #{date} \n #{time} \n is it time to collect fees? \n if yes, please add the students to the respective sales sheet```"
-      SlackJob.perform_later(message: message, random: '')
+      # SlackJob.perform_later(message: message, random: '')
+
     end
   end
 

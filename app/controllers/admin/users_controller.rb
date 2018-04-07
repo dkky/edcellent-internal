@@ -88,13 +88,13 @@ class Admin::UsersController < ApplicationController
 
   def select2_list_student
     if current_user.admin? || current_user.superadmin?
-      if params[:term][:term]
+      if !params[:term].nil? && params[:term][:term]
         @users = User.search_name(params[:term][:term]).where(user_access: 1)
       else
         @users = User.student
       end
     elsif current_user.tutor?
-      if params[:term] && params[:term][:term]
+      if !params[:term].nil? && params[:term][:term]
         user_ids = User.search_name(params[:term][:term]).where(user_access: 1).pluck(:id) & Group.tagged_with(current_user.eng_version_name).map {|g| g.users }.flatten.pluck(:id)
         @users = User.find(user_ids)
       else
