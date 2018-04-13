@@ -67,6 +67,7 @@ initialize_calendar = function() {
       selectable: true,
       selectHelper: true,
       defaultView: 'agendaWeek',
+      firstDay: 1,
       select: function(start, end) {
         $.getScript('/newmodal', function() {
           $('.modal_start_time').val(moment(start).format('YYYY-MM-DD HH:mm'));
