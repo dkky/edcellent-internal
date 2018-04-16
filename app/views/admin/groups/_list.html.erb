@@ -19,6 +19,7 @@
       <th>No.</th>
       <th>Name</th>
       <th>Students</th>
+      <th>Option</th>
       <th>Tutor in Charge</th>
     </tr>
   </thead>
@@ -29,6 +30,7 @@
         <td><%= i + 1 %></td>
         <td><%= group.name %></td>
         <td><%= group.users.map {|u| u.name} %></td>
+        <td class="icon-padding"><%= link_to  edit_admin_group_path(group) do %><i class="fa fa-pencil-square-o"></i><% end %></td>
         <td>
           <%= select_tag "tutors", options_for_select(User.tutor_plus_ck), { hide_label: true,prompt: group.tutor_list , class: 'tutor_for_groups'} %>
         </td>

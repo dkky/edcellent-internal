@@ -64,10 +64,17 @@ class Admin::GroupsController < ApplicationController
     end
   end
 
+  def edit
+    @group = Group.find(params[:id])
+    # @tutors = @group.tutors.pluck(:id).map { |i| i.to_s }.to_json
+    @tutors = User.where(english_name: @group.tutors.pluck(:name).map {|name| name.split(' ' )[0]}).pluck(:id).map {|i| i.to_s}.to_json
+  end
+
   def update
+    byebug
     id = params[:id].scan(/\d+/).first.to_i
-    tutor_id = params[:tutor_id].to_i
     @group = Group.find(id)
+    tutor_id = params[:tutor_id].to_i
     @tutor = User.find(tutor_id)
     @group.tutor_list << @tutor.eng_version_name
     if @group.save

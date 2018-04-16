@@ -37,7 +37,12 @@ Rails.application.routes.draw do
   
   namespace :admin do
     resources :users
-    resources :groups
+    resources :groups do
+      member do
+        get :get_tutors
+      end
+    end
+
     resources :profiles
     resources :periods
   end

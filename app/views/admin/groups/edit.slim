@@ -1,0 +1,145 @@
+= bootstrap_form_for @group, url: admin_group_path(@group) do |f|
+  .col-md-6
+    p
+    = f.text_field :name, label: 'What is the group name?', class: 'text-input',id: 'date-start',data: { index: "7"}
+  / .col-md-6
+  /   #power-search-random-group-div
+  /     p
+  /       b Select Students
+  /     = select_tag "groups", nil, id: 'power-search-random-group', class: "select-example-3", multiple: true
+  /     br
+  /     br
+  
+  / .col-md-6
+  /   br
+  /   p   
+      b Select Tutor
+    = f.select :tutor_list, User.tutor.map {|i| [i.eng_version_name,i.id]}, { hide_label: true, class: "select-example-2"}, { id: 'power-search-random-group', multiple: true}     
+  .col-md-6
+    br
+    p   
+      b Select Status
+    = f.select :group_status, Group.group_statuses, { hide_label: true,prompt: 'Select Group Status'}, { id: 'individual_select'}   
+    br
+    br
+    / = f.select :group_status, ['haha','hehe'], class: "form-control test-2", id: 'test-2', multiple: true
+  .col-md-6
+    #power-search-random-group
+      p   
+        b Their group tutors
+      = select_tag "tutors[]", User.tutor.map {|i| [i.eng_version_name,i.id]},{ id: "test-2", multiple: true}
+      = f.hidden_field :tutors,value: @tutors
+
+  / ##how to make it compatible with select tag/form rails
+
+    / = f.select(:group_status, User.tutor.map {|i| [i.eng_version_name,i.id]}, {hide_label: true,}, id: "test-2", :multiple => true) 
+    #power-search-random-group-div
+    # = f.submit 'Done'
+  / .col-md-6
+  /   p
+  /     b Is the session completed?
+  /   = f.select :period_status, [{"Incomplete":1}, {"Done": 0}].map {|i| [i.keys[0], i.values[0]]}, { hide_label: true, prompt: 'Status'},{class: 'test',data: { index: "3"}}
+
+
+
+javascript:
+
+  $(document).ready(function(){
+    $("#test-2").select2({
+      placeholder: "Select Group",
+    });
+  });
+  var tutorsId = JSON.parse($("input[name='group[tutors]']")[0].value)
+  $('#test-2').val(tutorsId).trigger('change');
+  // var groupId = $( '.edit_group' ).attr( 'id').match(/\d+/)[0]
+  // var tutorSelect = $('#test-2');
+  // $.ajax({
+  //     type: 'GET',
+  //     url: '/admin/groups/' + groupId + '/get_tutors',
+  //     // dataType: 'json'
+  // }).then(function (data) {
+  //     // create the option and append to Select2
+  //     // var option = new Option(data.full_name, data.id, true, true);
+  //     tutorSelect.append('7').trigger('change');
+
+  //     // manually trigger the `select2:select` event
+  //     // studentSelect.trigger({
+  //     //     type: 'select2:select',
+  //     //     params: {
+  //     //         data: data
+  //     //     }
+  //     // });
+  // });
+  
+  // var data = {
+  //     id: 1,
+  //     text: 'Barn owl'
+  // };
+
+  // var newOption = new Option(data.text, data.id, false, true);
+  // // $('#test-2').append(newOption).trigger('change');
+
+  $(document).ready(function(){
+    $(".select-example-3").select2({
+      maximumSelectionLength: 10,
+      placeholder: "Select Student",
+      createTag: function (params) {
+        return {
+          id: params.term,
+          text: params.term,
+          newOption: false
+        }
+      },
+      ajax: {
+        url: "/admin/users/select2_list_student.json",
+        dataType: 'json',
+        delay: 250,
+        data: function (term) {
+          return {
+              term: term
+          };
+        },
+        processResults: function (data) {
+          var results = [];
+          $.each(data, function(index, item){
+            var name = item.english_name + ' ' + item.last_name + ' (' + item.school + ')'
+            results.push({
+              id: item.id,
+              text: name
+            });
+          });
+          return {
+              results: results
+          };
+        }
+        // processResults: function (data, params) {
+        //   // return { results: $.map( data, function(client, i) {
+        //   //     var displayResult = client.first_name + ' ' + client.last_name 
+        //   //         return { id: client.id, text: displayResult}
+        //   //     } ) }; 
+        //   console.log(data.matches)
+        //   return { 
+        //     // Select2 requires an id, so we need to map the results and add an ID
+        //     // You could instead include an id in the tsv you add to soulheart ;)
+        //     results: data.matches.map(function(item) {
+        //       //var textToDisplay = item.category + ": " + item.text
+        //       return {
+        //         id: item.id,
+        //         text: item.first_name
+        //       };
+        //     }),
+        //     pagination: {
+        //       // If there are 10 matches, there's at least another page
+        //       more: data.matches.length === 10
+        //     }
+        //   };         
+        // }
+      },
+    });
+  });
+
+ 
+
+
+
+
