@@ -71,7 +71,7 @@ class Admin::GroupsController < ApplicationController
   end
 
   def update
-    byebug
+    # byebug
     id = params[:id].scan(/\d+/).first.to_i
     @group = Group.find(id)
     tutor_id = params[:tutor_id].to_i
