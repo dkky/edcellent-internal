@@ -10,7 +10,7 @@ h2 Create a session
   
     p   
       b Select Subject
-    = f.select :subject, ["VCE - EAL","VCE - Accounting","VCE - Chemistry","VCE - Biology","VCE - Eng", "IB - ENG", "Uni - English", "IB - Maths"], { hide_label: true,prompt: 'Select Subject'}, { id: 'individual_select'}  
+    = f.select :subject, ["VCE - EAL","VCE - Accounting","VCE - Chemistry","VCE - Biology","VCE - Eng", "IB - ENG", "Uni - English", "IB - Maths","IB - Physics"], { hide_label: true,prompt: 'Select Subject'}, { id: 'individual_select'}  
   
     p  
     = f.text_field :session_number, label: 'Session Number', class: 'text-input'    

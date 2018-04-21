@@ -13,7 +13,7 @@ h2 Create a session
   .col-md-6
     p   
       b Select Subject
-    = f.select :subject, ["VCE - EAL","VCE - Accounting","VCE - Chemistry","VCE - Biology","VCE - Eng", "IB - ENG", "Uni - English", "IB - Maths"] { hide_label: true,prompt: 'Select Subject'}, { id: 'individual_select'}  
+    = f.select :subject, ["VCE - EAL","VCE - Accounting","VCE - Chemistry","VCE - Biology","VCE - Eng", "IB - ENG", "Uni - English", "IB - Maths","IB - Physics"] { hide_label: true,prompt: 'Select Subject'}, { id: 'individual_select'}  
   .col-md-6
     p  
     = f.text_field :description, label: 'Description (Optional)', class: 'text-input'

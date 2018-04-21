@@ -1,0 +1,20 @@
+
+p
+  strong Name:
+  = @group.name
+
+p
+  strong Status:
+  = @group.group_status
+
+p
+  strong tutors:
+  = @group.tutors.map {|tutor| tutor.eng_version_name}
+
+= link_to 'Edit', edit_admin_group_path(@group)
+
+
+
+
+
+

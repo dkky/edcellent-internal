@@ -4,7 +4,7 @@ class Admin::GroupsController < ApplicationController
 
 
   respond_to :html, :json
-  layout :determine_layout, only: [:index]
+  layout :determine_layout, only: [:index, :edit]
 
   def new
     @group =  Group.new
@@ -66,24 +66,36 @@ class Admin::GroupsController < ApplicationController
 
   def edit
     @group = Group.find(params[:id])
-    # @tutors = @group.tutors.pluck(:id).map { |i| i.to_s }.to_json
-    @tutors = User.where(english_name: @group.tutors.pluck(:name).map {|name| name.split(' ' )[0]}).pluck(:id).map {|i| i.to_s}.to_json
+    @tutors = @group.tutors.pluck(:id).map { |i| i.to_s }.to_json
+    # @tutors = User.where(english_name: @group.tutors.pluck(:name).map {|name| name.split(' ' )[0]}).pluck(:id).map {|i| i.to_s}.to_json
+    # byebug
+  end
+
+  def show
+    byebug
+    @group = Group.find(:id)
   end
 
   def update
-    # byebug
-    id = params[:id].scan(/\d+/).first.to_i
-    @group = Group.find(id)
-    tutor_id = params[:tutor_id].to_i
-    @tutor = User.find(tutor_id)
-    @group.tutor_list << @tutor.eng_version_name
+    byebug
+    @group = Group.find(params[:id])
+    @tutor = User.find(params[:tutors]).map {|u|u.eng_version_name}
+    @group.tutor_list = @tutor
+    @group.update(sanitize_group_params)
+    # id = params[:id].scan(/\d+/).first.to_i
+    # @group = Group.find(id)
+    # tutor_id = params[:tutor_id].to_i
+    # @tutor = User.find(tutor_id)
+    # @group.tutor_list << @tutor.eng_version_name
     if @group.save
-      respond_to do |format|
-        format.html 
-        format.js { flash[:notice] = "You have successfully selected " + @tutor.name }
-      end
+      redirect_to admin_groups_path(@group)
+      # respond_to do |format|
+      #   format.html 
+      #   format.js { flash[:notice] = "You have successfully selected " + @tutor.name }
+      # end
     else
-      render 'index', flash[:error] = "Failure to select your tutor"
+      render 'edit'
+      # render 'index', flash[:error] = "Failure to select your tutor"
     end
   end
 
@@ -102,10 +114,11 @@ class Admin::GroupsController < ApplicationController
   end
 
   def sanitize_group_params
-    if !params[:groups].blank?
-      params[:groups].map(&:to_i) 
-    else  
-      return []
-    end
+    params.require(:group).permit(:name, :group_status)
+    # if !params[:groups].blank?
+    #   params[:groups].map(&:to_i) 
+    # else  
+    #   return []
+    # end
   end
 end

@@ -17,7 +17,7 @@ class Period < ApplicationRecord
   # validates :description, :presence => true
   validates :subject, :presence => true
   validates :period_status, :presence => true
-  validates :tutor_id, :presence => true
+  validates :tutorx_id, :presence => true
   validates :group_id, :presence => true
 
   enum period_status: [:done, :incomplete]

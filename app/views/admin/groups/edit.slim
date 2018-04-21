@@ -27,14 +27,17 @@
     #power-search-random-group
       p   
         b Their group tutors
-      = select_tag "tutors[]", User.tutor.map {|i| [i.eng_version_name,i.id]},{ id: "test-2", multiple: true}
+      = select_tag "tutors[]", options_for_select(User.tutor.map {|i| [i.eng_version_name,i.id]}),{ id: "test-2", multiple: true}
       = f.hidden_field :tutors,value: @tutors
+      br
+      br
+    = f.submit 'Update'
+
 
   / ##how to make it compatible with select tag/form rails
 
     / = f.select(:group_status, User.tutor.map {|i| [i.eng_version_name,i.id]}, {hide_label: true,}, id: "test-2", :multiple => true) 
     #power-search-random-group-div
-    # = f.submit 'Done'
   / .col-md-6
   /   p
   /     b Is the session completed?
@@ -49,6 +52,7 @@ javascript:
       placeholder: "Select Group",
     });
   });
+  debugger
   var tutorsId = JSON.parse($("input[name='group[tutors]']")[0].value)
   $('#test-2').val(tutorsId).trigger('change');
   // var groupId = $( '.edit_group' ).attr( 'id').match(/\d+/)[0]
