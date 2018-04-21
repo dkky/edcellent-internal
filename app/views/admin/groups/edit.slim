@@ -28,7 +28,7 @@
       p   
         b Their group tutors
       = select_tag "tutors[]", options_for_select(User.tutor.map {|i| [i.eng_version_name,i.id]}),{ id: "test-2", multiple: true}
-      = f.hidden_field :tutors,value: @tutors
+      = f.hidden_field :tutors, value: @tutors
       br
       br
     = f.submit 'Update'

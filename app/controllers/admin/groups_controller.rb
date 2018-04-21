@@ -71,31 +71,31 @@ class Admin::GroupsController < ApplicationController
     # byebug
   end
 
-  def show
-    byebug
-    @group = Group.find(:id)
-  end
+  # def show
+  #   byebug
+  #   @group = Group.find(:id)
+  # end
 
   def update
-    byebug
-    @group = Group.find(params[:id])
-    @tutor = User.find(params[:tutors]).map {|u|u.eng_version_name}
-    @group.tutor_list = @tutor
-    @group.update(sanitize_group_params)
-    # id = params[:id].scan(/\d+/).first.to_i
-    # @group = Group.find(id)
-    # tutor_id = params[:tutor_id].to_i
-    # @tutor = User.find(tutor_id)
-    # @group.tutor_list << @tutor.eng_version_name
+    # byebug
+    # @group = Group.find(params[:id])
+    # @tutor = User.find(params[:tutors]).map {|u|u.eng_version_name}
+    # @group.tutor_list = @tutor
+    # @group.update(sanitize_group_params)
+    id = params[:id].scan(/\d+/).first.to_i
+    @group = Group.find(id)
+    tutor_id = params[:tutor_id].to_i
+    @tutor = User.find(tutor_id)
+    @group.tutor_list << @tutor.eng_version_name
     if @group.save
-      redirect_to admin_groups_path(@group)
-      # respond_to do |format|
-      #   format.html 
-      #   format.js { flash[:notice] = "You have successfully selected " + @tutor.name }
-      # end
+      # redirect_to admin_groups_path(@group)
+      respond_to do |format|
+        format.html 
+        format.js { flash[:notice] = "You have successfully selected " + @tutor.name }
+      end
     else
-      render 'edit'
-      # render 'index', flash[:error] = "Failure to select your tutor"
+      # render 'edit'
+      render 'index', flash[:error] = "Failure to select your tutor"
     end
   end
 
@@ -114,11 +114,11 @@ class Admin::GroupsController < ApplicationController
   end
 
   def sanitize_group_params
-    params.require(:group).permit(:name, :group_status)
-    # if !params[:groups].blank?
-    #   params[:groups].map(&:to_i) 
-    # else  
-    #   return []
-    # end
+    # params.require(:group).permit(:name, :group_status)
+    if !params[:groups].blank?
+      params[:groups].map(&:to_i) 
+    else  
+      return []
+    end
   end
 end
