@@ -21,6 +21,7 @@
       <th>Students</th>
       <th>Option</th>
       <th>Tutor in Charge</th>
+      <th>Group Status</th>
     </tr>
   </thead>
   <tbody>
@@ -34,6 +35,7 @@
         <td>
           <%= group.tutors.pluck(:name) %>
         </td>
+        <td><%= group.group_status %></td>
    </div> 
   <% end %> 
   </tbody>
