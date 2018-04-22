@@ -116,11 +116,11 @@ class Admin::GroupsController < ApplicationController
     end
   end
 
-  # def sanitize_group_params
-  #   # if !params[:groups].blank?
-  #   #   params[:groups].map(&:to_i) 
-  #   # else  
-  #   #   return []
-  #   # end
-  # end
+  def sanitize_group_params
+    if !params[:groups].blank?
+      params[:groups].map(&:to_i) 
+    else  
+      return []
+    end
+  end
 end

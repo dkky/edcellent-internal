@@ -178,6 +178,7 @@ class PeriodsController < ApplicationController
   end
 
   def create  
+    byebug
     @period = Period.new(periods_params)
     if current_user.tutor? || current_user.admin? || current_user.superadmin?
       @period.tutor_id = current_user.id
