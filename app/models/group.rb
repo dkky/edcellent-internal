@@ -12,7 +12,8 @@ class Group < ApplicationRecord
     default_setting: { sorted_by: 'created_at_desc' },
     available_filters: [
       :with_different_tutor,
-      :with_different_grouping
+      :with_different_grouping,
+      :with_different_name
     ]
   )
 
@@ -22,6 +23,10 @@ class Group < ApplicationRecord
   # scope :with_different_grouping, lambda {|grouping|
   #   tagged_with(grouping)
   # }
+
+  scope :with_different_name, lambda { |group_name|
+    where(name: group_name)
+  }
 
   # scope :with_different_grouping, -> (group_type) { joins(:users).group("groups.id HAVING count(users.id) = " + group_type.to_s) }
   # scope :with_different_grouping, ->(n) { where("(SELECT COUNT(*) FROM groups WHERE user_id = users.id) = ?", n) }
@@ -38,6 +43,10 @@ class Group < ApplicationRecord
   def self.options_for_grouping
     ["1","2","3","4","5","6","7"]
     # ActsAsTaggableOn::Tagging.includes(:tag).where(context: 'groupings').pluck(:name).uniq
+  end
+
+  def self.options_for_name
+    Group.all.map {|group| group.name}
   end
 
   def self.options_for_tutor

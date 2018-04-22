@@ -204,7 +204,9 @@ class PeriodsController < ApplicationController
       if @period.save
         # byebug
     #     render 'periods/create.js.erb' 
-        GoogleCalendarJob.perform_later(action: 'create', period_id: @period.id, session: session[:authorization], client_options: client_options)
+        if current_user.id == @period.tutor.id
+          GoogleCalendarJob.perform_later(action: 'create', period_id: @period.id, session: session[:authorization], client_options: client_options)
+        end
         render 'create.js.erb'
         # create_event(@period.id)
         # byebug
@@ -227,7 +229,10 @@ class PeriodsController < ApplicationController
   def drop
     @period.update_attributes(periods_params)
     # update_event(@period.google_event_id)
-    GoogleCalendarJob.perform_later(action: 'update', google_event_id: @period.google_event_id, period_id: @period.id, session: session[:authorization], client_options: client_options)
+    if current_user.id == @period.tutor.id
+      GoogleCalendarJob.perform_later(action: 'update', google_event_id: @period.google_event_id, period_id: @period.id, session: session[:authorization], client_options: client_options)
+    end
+
     if Rails.env.production? && @period.done?
       session_date = @period.start_time.strftime("%d/%-m %a")
       session_desc = @period.group.users.pluck(:english_name).join(", ") + ' ' + @period.session_number.to_s
@@ -265,7 +270,8 @@ class PeriodsController < ApplicationController
     @period.title = @period.subject + ': ' + @period.group.name + ' - ' + @period.tutor.english_name + ' ' + @period.session_number.to_s
     if @period.save
       # update_event(@period.google_event_id)
-      unless current_user.admin? || current_user.superadmin?
+      if current_user.id == @period.tutor.id
+      # unless current_user.admin? || current_user.superadmin?
         GoogleCalendarJob.perform_later(action: 'update', google_event_id: @period.google_event_id, period_id: @period.id, session: session[:authorization], client_options: client_options)
 
         if Rails.env.production? && @period.done? 
@@ -287,7 +293,9 @@ class PeriodsController < ApplicationController
 
   def destroy
     @period = Period.destroy(params[:id])
-    GoogleCalendarJob.perform_later(action: 'delete', google_event_id: @period.google_event_id, period_id: @period.id, session: session[:authorization], client_options: client_options)
+    if current_user.id == @period.tutor.id
+      GoogleCalendarJob.perform_later(action: 'delete', google_event_id: @period.google_event_id, period_id: @period.id, session: session[:authorization], client_options: client_options)
+    end
     # delete_event(@period.google_event_id, @period.id, params[:attribute])
     @period_id = @period.id
     if params[:attribute] == "delete_period_modal" || params[:attribute] == "delete_period_calendar"
@@ -324,7 +332,10 @@ class PeriodsController < ApplicationController
     elsif @period.done?
       @period.update(period_status: 1)  
     end
-    GoogleCalendarJob.perform_later(action: 'update', google_event_id: @period.google_event_id, period_id: @period.id, session: session[:authorization], client_options: client_options)
+
+    if current_user.id == @period.tutor.id
+      GoogleCalendarJob.perform_later(action: 'update', google_event_id: @period.google_event_id, period_id: @period.id, session: session[:authorization], client_options: client_options)
+    end
     # render "update.js.erb"
     if Rails.env.production? && @period.done?
       session_date = @period.start_time.strftime("%d/%-m %a")

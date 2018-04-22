@@ -52,6 +52,7 @@ class Admin::GroupsController < ApplicationController
         params[:filterrific],
         select_options: {
           with_different_tutor: Group.options_for_tutor,
+          with_different_name: Group.options_for_name
           # with_different_grouping: Group.options_for_grouping 
         },
       ) or return

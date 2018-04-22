@@ -19,6 +19,16 @@
           %>
         </div>
       </div>
+      <div class="col-md-2">
+        <div class="form-group chardin_box" data-position='top'>               
+          <label> Group Name</label>
+          <%= f.select :with_different_name,
+                     @filterrific.select_options[:with_different_name],
+                     { include_blank: '- Any -' }, 
+                     { class: 'form-control' }     
+          %>
+        </div>
+      </div>
 
     
   <% end %>
