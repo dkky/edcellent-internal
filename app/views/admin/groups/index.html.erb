@@ -28,6 +28,16 @@
                      { class: 'form-control' }     
           %>
         </div>
+      </div>     
+      <div class="col-md-2">
+        <div class="form-group chardin_box" data-position='top'>               
+          <label> Group Status</label>
+          <%= f.select :with_different_group_status,
+                     @filterrific.select_options[:with_different_group_status],
+                     { include_blank: '- Any -' }, 
+                     { class: 'form-control' }     
+          %>
+        </div>
       </div>
 
     
