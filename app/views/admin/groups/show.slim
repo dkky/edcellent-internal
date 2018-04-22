@@ -9,7 +9,7 @@ p
 
 p
   strong tutors:
-  = @group.tutors.map {|tutor| tutor.eng_version_name}
+  = @group.tutors.map {|tutor| tutor.name}
 
 = link_to 'Edit', edit_admin_group_path(@group)
 

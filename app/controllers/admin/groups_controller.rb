@@ -66,36 +66,39 @@ class Admin::GroupsController < ApplicationController
 
   def edit
     @group = Group.find(params[:id])
-    @tutors = @group.tutors.pluck(:id).map { |i| i.to_s }.to_json
-    # @tutors = User.where(english_name: @group.tutors.pluck(:name).map {|name| name.split(' ' )[0]}).pluck(:id).map {|i| i.to_s}.to_json
-    # byebug
+    # @tutors = @group.tutors.pluck(:id).map { |i| i.to_s }.to_json
+    @tutor_names = @group.tutors.pluck(:name)
+    @ids = @tutor_names.map {|tutor_name| User.select {|u| u.eng_version_name == tutor_name}.first.id}
+    @tutors = @ids.map {|i| i.to_s}.to_json
+    # @tutors = User.where(id: @group.tutors.pluck(:name).map {|name| name.split(' ' )[0]}).pluck(:id).map {|i| i.to_s}.to_json
   end
 
-  # def show
-  #   byebug
-  #   @group = Group.find(:id)
-  # end
+  def show
+    @group = Group.find(params[:id])
+  end
 
   def update
-    # byebug
-    # @group = Group.find(params[:id])
-    # @tutor = User.find(params[:tutors]).map {|u|u.eng_version_name}
-    # @group.tutor_list = @tutor
-    # @group.update(sanitize_group_params)
-    id = params[:id].scan(/\d+/).first.to_i
-    @group = Group.find(id)
-    tutor_id = params[:tutor_id].to_i
-    @tutor = User.find(tutor_id)
-    @group.tutor_list << @tutor.eng_version_name
+    @group = Group.find(params[:id])
+    @tutor = User.find(params[:tutors]).map {|u|u.eng_version_name}
+    @group.tutor_list = @tutor
+    @group.update(name: params[:group][:name])
+    unless params[:group][:group_status].blank?
+      @group.update(group_status: params[:group][:group_status].to_i)
+    end
+    # id = params[:id].scan(/\d+/).first.to_i
+    # @group = Group.find(id)
+    # tutor_id = params[:tutor_id].to_i
+    # @tutor = User.find(tutor_id)
+    # @group.tutor_list << @tutor.eng_version_name
     if @group.save
-      # redirect_to admin_groups_path(@group)
-      respond_to do |format|
-        format.html 
-        format.js { flash[:notice] = "You have successfully selected " + @tutor.name }
-      end
+      redirect_to admin_group_path(@group)
+      # respond_to do |format|
+      #   format.html 
+      #   format.js { flash[:notice] = "You have successfully selected " + @tutor.name }
+      # end
     else
-      # render 'edit'
-      render 'index', flash[:error] = "Failure to select your tutor"
+      render 'edit'
+      # render 'index', flash[:error] = "Failure to select your tutor"
     end
   end
 
@@ -113,12 +116,11 @@ class Admin::GroupsController < ApplicationController
     end
   end
 
-  def sanitize_group_params
-    # params.require(:group).permit(:name, :group_status)
-    if !params[:groups].blank?
-      params[:groups].map(&:to_i) 
-    else  
-      return []
-    end
-  end
+  # def sanitize_group_params
+  #   # if !params[:groups].blank?
+  #   #   params[:groups].map(&:to_i) 
+  #   # else  
+  #   #   return []
+  #   # end
+  # end
 end

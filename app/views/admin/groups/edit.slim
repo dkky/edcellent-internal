@@ -22,13 +22,13 @@
     = f.select :group_status, Group.group_statuses, { hide_label: true,prompt: 'Select Group Status'}, { id: 'individual_select'}   
     br
     br
-    / = f.select :group_status, ['haha','hehe'], class: "form-control test-2", id: 'test-2', multiple: true
+    / = f.select :group_status, ['haha','hehe'], class: "form-control", id: 'test-2', multiple: true
   .col-md-6
     #power-search-random-group
       p   
         b Their group tutors
       = select_tag "tutors[]", options_for_select(User.tutor.map {|i| [i.eng_version_name,i.id]}),{ id: "test-2", multiple: true}
-      = f.hidden_field :tutors, value: @tutors
+      = f.hidden_field :original_tutors, value: @tutors
       br
       br
     = f.submit 'Update'
@@ -52,8 +52,8 @@ javascript:
       placeholder: "Select Group",
     });
   });
-  debugger
-  var tutorsId = JSON.parse($("input[name='group[tutors]']")[0].value)
+  // debugger
+  var tutorsId = JSON.parse($("input[name='group[original_tutors]']")[0].value)
   $('#test-2').val(tutorsId).trigger('change');
   // var groupId = $( '.edit_group' ).attr( 'id').match(/\d+/)[0]
   // var tutorSelect = $('#test-2');
