@@ -178,7 +178,7 @@ class PeriodsController < ApplicationController
   end
 
   def create  
-    byebug
+    # byebug
     @period = Period.new(periods_params)
     if current_user.tutor? || current_user.admin? || current_user.superadmin?
       @period.tutor_id = current_user.id
@@ -248,7 +248,7 @@ class PeriodsController < ApplicationController
     if sanitize_group_params.count > 0
       user = User.find(*sanitize_group_params)
       if existing_group = Group.joins(:users).where('users.id' => sanitize_group_params).select {|g| g.user_ids == sanitize_group_params}.first
-        @period.group_id = existing_group.id
+        # @period.group_id = existing_group.id
       else 
         new_group = Group.new
         new_group.user_ids = sanitize_group_params
