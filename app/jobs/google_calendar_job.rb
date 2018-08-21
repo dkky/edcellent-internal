@@ -89,8 +89,7 @@ class GoogleCalendarJob < ApplicationJob
           # time_zone: 'Australia/Melbourne',
         },
         attendees: [
-          {email: 'kai@edcellent.com'},
-          {email: 'ericw@edcellent.com'},
+          {email: 'kai@edcellent.com'}
         ],
         # include it next time *********
       })
